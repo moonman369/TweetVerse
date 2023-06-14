@@ -4,23 +4,40 @@ pragma solidity >=0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract TwitterDapp is ERC721("TwitterVerse", "TVRS") {
 
-    uint256 tokenId;
+    using Strings for uint256;
+    using Counters for Counters.Counter;
 
-    struct tweet{
-        uint256 tid;
-        uint256 upvotes;
-        string name;
-        string description;
-        string metadata;
-        uint256 [] comments;
-        address fromAddress;
+    Counters.Counter s_tweetId;
+    Counters.Counter s_commentId;
+    string public i_baseUri;
+
+    struct Comment {
+        uint256 id;
+        uint256 tweetId;
+        address author;
+        string metadataUri;
     }
 
-    tweet[] public tweets;
+    struct Tweet {
+        uint256 id;
+        uint256 upvotes;
+        address author;
+        string metadataUri;
+        uint256 [] comments;
+    }
+
+    Tweet[] private s_tweets;
+    mapping (uint256 => Comment) private s_comments; 
+
+    constructor (string memory _baseUri) {
+        i_baseUri = _baseUri;
+    }
+
 
     function tokenURI(uint256 _tokenId)
     public
@@ -28,15 +45,67 @@ contract TwitterDapp is ERC721("TwitterVerse", "TVRS") {
     override 
     returns (string memory)
     {
-        bytes memory dataURI = abi.encodePacked( 
-            '{',
-            '"name":', '"', tweets[_tokenId].name, '",', 
-            '"description":' , '"', tweets[_tokenId].description, '"', ',' ,  
-            '"attributes":', '[', '{', '"trait_type":', '"Upvotes",' , '"value":', Strings.toString(tweets[_tokenId].upvotes), '}', ']' , '}' 
-        );
+        return string(abi.encodePacked(i_baseUri, _tokenId));
+    }
 
-        return string( 
-            abi.encodePacked("data:application/json;base64,", Base64.encode(dataURI)));
+
+    function postTweet(string memory _metadataUri) public {
+        _safeMint(msg.sender, s_tweetId.current());
+        s_tweets.push(
+            Tweet({
+                id: s_tweetId.current(),
+                upvotes: 0,
+                comments: new uint256[] (0),
+                author: msg.sender,
+                metadataUri: _metadataUri
+            })
+        );
+        
+        s_tweetId.increment();
+    }
+
+
+    function postComment(uint256 _tweetId, string memory _metadataUri) public {
+
+        s_tweets[_tweetId].comments.push(s_commentId.current());
+
+        s_comments[s_commentId.current()] = 
+        Comment ({
+            id: s_commentId.current(),
+            tweetId: _tweetId,
+            author: msg.sender,
+            metadataUri: _metadataUri
+        });
+
+        s_commentId.increment();
+        
+    }
+
+
+    function upvote(uint256 _tweetId) public {        
+        s_tweets[_tweetId].upvotes += 1;    
+    }
+
+
+    function getTweetById(uint256 _tweetId) public view returns (Tweet memory) {
+        return s_tweets[_tweetId];
+    }
+ 
+
+    function getCommenstByTweetId(uint256 _tweetId) public view returns (Comment [] memory) {
+        Tweet memory tweet = s_tweets[_tweetId];
+        Comment [] memory tweetComments = new Comment[] (tweet.comments.length);
+
+        for (uint256 i = 0; i < tweet.comments.length; i++) {
+            tweetComments[i] = s_comments[tweet.comments[i]];
+        }
+
+        return tweetComments;
+    }
+
+
+    function getAllTweets() public view returns(Tweet[] memory) {
+        return s_tweets;
     }
 
 
