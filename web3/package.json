@@ -5,6 +5,23 @@
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "dotenv": "^16.1.4",
     "hardhat": "^2.15.0"
-  }
+  },
+  "scripts": {
+    "1==========================================": "DEPLOY SCRIPTS==========================================",
+    "deploy-sepolia": "npx hardhat --network sepolia run scripts/deployPipeline.js",
+    "deploy-mumbai": "npx hardhat --network mumbai run scripts/deployPipeline.js",
+    "deploy-local": "npx hardhat --network localhost run scripts/deployPipeline.js",
+    "deploy-fuji": "npx hardhat --network fuji run scripts/deployPipeline.js"
+  },
+  "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.",
+  "version": "1.0.0",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
