@@ -34,7 +34,7 @@ function App() {
   const [newTweetDescription, setNewTweetDescription] = useState<string | "">(
     ""
   );
-  const refreshTime = APP_CONSTANTS.REACT_APP_REFRESH_TIMER * 1000
+  const refreshTime = APP_CONSTANTS.REACT_APP_REFRESH_TIMER * 1000;
   const [torusPlugin, setTorusPlugin] =
     useState<TorusWalletConnectorPlugin | null>(null);
 
@@ -56,7 +56,7 @@ function App() {
             network: "testnet",
             uxMode: "popup",
             whiteLabel: {
-              name: "Twitter DApp",
+              name: "TwitterVerse-1.0",
               logoLight: APP_CONSTANTS.APP_LOGO,
               logoDark: APP_CONSTANTS.APP_LOGO,
               defaultLanguage: "en",
@@ -101,16 +101,24 @@ function App() {
           await setProvider(web3auth.provider);
 
           let user = await web3auth.getUserInfo();
-          console.log('user ', user)
-          if(user.name && user.name !== null &&  user.name !== " " &&  user.name !== "")
-            setUserName(user.name)
+          console.log("user ", user);
+          if (
+            user.name &&
+            user.name !== null &&
+            user.name !== " " &&
+            user.name !== ""
+          )
+            setUserName(user.name);
 
-          if(user.profileImage && user.profileImage !== null &&  user.profileImage !== " " &&  user.profileImage !== "")
-            setProfileImage(user.profileImage)
+          if (
+            user.profileImage &&
+            user.profileImage !== null &&
+            user.profileImage !== " " &&
+            user.profileImage !== ""
+          )
+            setProfileImage(user.profileImage);
         }
 
-        
-        
         await fetchAllTweets();
       } catch (error) {
         console.error(error);
@@ -143,20 +151,28 @@ function App() {
         },
       }
     );
-    
+
     setProvider(web3authProvider);
 
-    if(web3authProvider){
-      
+    if (web3authProvider) {
       let user = await web3auth.getUserInfo();
-      
-      if(user.name && user.name !== null &&  user.name !== " " &&  user.name !== "")
-        setUserName(user.name)
 
-      if(user.profileImage && user.profileImage !== null &&  user.profileImage !== " " &&  user.profileImage !== "")
-        setProfileImage(user.profileImage)
+      if (
+        user.name &&
+        user.name !== null &&
+        user.name !== " " &&
+        user.name !== ""
+      )
+        setUserName(user.name);
+
+      if (
+        user.profileImage &&
+        user.profileImage !== null &&
+        user.profileImage !== " " &&
+        user.profileImage !== ""
+      )
+        setProfileImage(user.profileImage);
     }
-    
   };
   /*
   const getAccounts = async () => {
@@ -187,7 +203,6 @@ function App() {
       let fetchedTweets = await rpc.getAllTweets();
       let tweets = [...fetchedTweets];
       setTweets(tweets.reverse());
-
     } catch (error) {
       console.log("error in fetching tweets", error);
     }
