@@ -1,16 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_baseUri",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -88,6 +77,24 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "tweetIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "prefComments",
+        "type": "string"
+      }
+    ],
+    "name": "addComment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "to",
         "type": "address"
@@ -129,9 +136,14 @@
       {
         "components": [
           {
-            "internalType": "uint256",
-            "name": "id",
-            "type": "uint256"
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
           },
           {
             "internalType": "uint256",
@@ -139,22 +151,17 @@
             "type": "uint256"
           },
           {
-            "internalType": "address",
-            "name": "author",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "metadataUri",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256[]",
+            "internalType": "string[]",
             "name": "comments",
-            "type": "uint256[]"
+            "type": "string[]"
+          },
+          {
+            "internalType": "address",
+            "name": "fromAddress",
+            "type": "address"
           }
         ],
-        "internalType": "struct TweetVerse.Tweet[]",
+        "internalType": "struct TwitterDapp.tweet[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -176,106 +183,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tweetId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getCommenstByTweetId",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tweetId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "author",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "metadataUri",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct TweetVerse.Comment[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tweetId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getTweetById",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "upvotes",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "author",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "metadataUri",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "comments",
-            "type": "uint256[]"
-          }
-        ],
-        "internalType": "struct TweetVerse.Tweet",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "i_baseUri",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -335,37 +242,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tweetId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_metadataUri",
-        "type": "string"
-      }
-    ],
-    "name": "postComment",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_metadataUri",
-        "type": "string"
-      }
-    ],
-    "name": "postTweet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -515,11 +391,63 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_tweetId",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "tweets",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "upvotes",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "fromAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tweetIndex",
         "type": "uint256"
       }
     ],
     "name": "upvote",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "prefName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "prefDesc",
+        "type": "string"
+      }
+    ],
+    "name": "writeTweet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

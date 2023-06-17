@@ -1,5 +1,5 @@
 {
-  "name": "twitter-verse-client-side",
+  "name": "twitter-dapp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,15 +11,15 @@
     "@types/node": "^16.11.60",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
-    "@web3auth/base": "^2.1.3",
-    "@web3auth/openlogin-adapter": "^2.1.3",
-    "@web3auth/torus-wallet-connector-plugin": "^2.1.3",
-    "@web3auth/web3auth": "^2.1.3",
+    "@web3auth/base": "^2.1.2",
+    "@web3auth/openlogin-adapter": "^2.1.2",
+    "@web3auth/torus-wallet-connector-plugin": "^2.1.2",
+    "@web3auth/web3auth": "^2.1.2",
     "react": "^18.2.0",
-    "react-app-rewired": "5.0.1",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
+    "react-app-rewired": "5.0.1",
     "react-toastify": "^9.0.8",
     "typescript": "^4.8.3",
     "web-vitals": "^2.1.4"
@@ -59,10 +59,5 @@
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "url": "^0.11.0"
-  },
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  }
 }
