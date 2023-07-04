@@ -21,6 +21,17 @@ export default class EthereumRpc {
     }
   }
 
+  async getChainId(): Promise<number> {
+    try {
+      const web3 = new Web3(this.provider as any);
+      const chainId = await web3.eth.getChainId();
+      return chainId;
+    } catch (error: unknown) {
+      console.error(error);
+      return -1;
+    }
+  }
+
   async sendUpVoteTransaction(tweetIndex: any): Promise<string> {
     try {
       const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;

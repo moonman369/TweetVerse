@@ -3,6 +3,7 @@ import { Card, Form } from "react-bootstrap";
 import { FaComment, FaRecycle, FaRetweet, FaThumbsUp } from "react-icons/fa";
 
 import { Web3AuthCore } from "@web3auth/core";
+import { Web3Auth } from "@web3auth/web3auth";
 import {
   WALLET_ADAPTERS,
   CHAIN_NAMESPACES,
@@ -22,7 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
 
 function App() {
-  const [web3auth, setWeb3auth] = useState<Web3AuthCore | null>(null);
+  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
     null
   );
@@ -41,91 +42,111 @@ function App() {
   useEffect(() => {
     const init = async () => {
       try {
-        const web3auth = new Web3AuthCore({
-          clientId,
+        // const web3auth = new Web3Auth({
+        //   clientId,
+        //   chainConfig: {
+        //     chainNamespace: CHAIN_NAMESPACES.EIP155,
+        //     chainId: "0x13881",
+        //     rpcTarget: APP_CONSTANTS.RPC_TARGET, // This is the mainnet RPC we have added, please pass on your own endpoint while creating an app
+        //   },
+        // });
+
+        const web3auth = new Web3Auth({
+          clientId, // get it from Web3Auth Dashboard
+          // web3AuthNetwork: "cyan",
           chainConfig: {
-            chainNamespace: CHAIN_NAMESPACES.EIP155,
-            chainId: "0x13881",
-            rpcTarget: APP_CONSTANTS.RPC_TARGET, // This is the mainnet RPC we have added, please pass on your own endpoint while creating an app
+            chainNamespace: "eip155",
+            chainId: "0x13881", // hex of 80001, polygon testnet
+            rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
+            // Avoid using public rpcTarget in production.
+            // Use services like Infura, Quicknode etc
+            displayName: "Polygon Mumbai Testnet",
+            blockExplorer: "https://mumbai.polygonscan.com/",
+            ticker: "MATIC",
+            tickerName: "Matic",
           },
         });
 
-        const openloginAdapter = new OpenloginAdapter({
-          adapterSettings: {
-            clientId,
-            network: "testnet",
-            uxMode: "popup",
-            whiteLabel: {
-              name: "TwitterVerse-1.0",
-              logoLight: APP_CONSTANTS.APP_LOGO,
-              logoDark: APP_CONSTANTS.APP_LOGO,
-              defaultLanguage: "en",
-              dark: true, // whether to enable dark mode. defaultValue: false
-            },
-            loginConfig: {
-              // Add login configs corresponding to the providers on modal
-              // Twitter login
-              jwt: {
-                name: "Custom Auth Login",
-                verifier: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_VERIFIER, // Please create a verifier on the developer dashboard and pass the name here
-                typeOfLogin: "twitter", // Pass on the login provider of the verifier you've created
-                clientId: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_ID, // Pass on the clientId of the login provider here - Please note this differs from the Web3Auth ClientID. This is the JWT Client ID
-              },
-              // Add other login providers here
-            },
-          },
-        });
-        const torusPlugin = new TorusWalletConnectorPlugin({
-          torusWalletOpts: {},
-          walletInitOptions: {
-            whiteLabel: {
-              theme: { isDark: true, colors: { primary: "#ffffff" } },
-              logoDark:
-                "https://i.ibb.co/kDNCfC9/reshot-icon-wallet-9-H3-QMSDLFR.png",
-              logoLight:
-                "https://i.ibb.co/kDNCfC9/reshot-icon-wallet-9-H3-QMSDLFR.png",
-            },
-            useWalletConnect: true,
-            enableLogging: true,
-          },
-        });
-
-        await web3auth.addPlugin(torusPlugin);
-        setTorusPlugin(torusPlugin);
-
-        await web3auth.configureAdapter(openloginAdapter);
         setWeb3auth(web3auth);
+        await web3auth.initModal();
 
-        await web3auth.init();
-        if (web3auth.provider) {
-          await setProvider(web3auth.provider);
+        // const openloginAdapter = new OpenloginAdapter({
+        //   adapterSettings: {
+        //     clientId,
+        //     network: "testnet",
+        //     uxMode: "popup",
+        //     whiteLabel: {
+        //       name: "TwitterVerse-1.0",
+        //       logoLight: APP_CONSTANTS.APP_LOGO,
+        //       logoDark: APP_CONSTANTS.APP_LOGO,
+        //       defaultLanguage: "en",
+        //       dark: true, // whether to enable dark mode. defaultValue: false
+        //     },
+        //     loginConfig: {
+        //       // Add login configs corresponding to the providers on modal
+        //       // Twitter login
+        //       jwt: {
+        //         name: "Custom Auth Login",
+        //         verifier: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_VERIFIER, // Please create a verifier on the developer dashboard and pass the name here
+        //         typeOfLogin: "twitter", // Pass on the login provider of the verifier you've created
+        //         clientId: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_ID, // Pass on the clientId of the login provider here - Please note this differs from the Web3Auth ClientID. This is the JWT Client ID
+        //       },
+        //       // Add other login providers here
+        //     },
+        //   },
+        // });
+        // const torusPlugin = new TorusWalletConnectorPlugin({
+        //   torusWalletOpts: {},
+        //   walletInitOptions: {
+        //     whiteLabel: {
+        //       theme: { isDark: true, colors: { primary: "#ffffff" } },
+        //       logoDark:
+        //         "https://i.ibb.co/kDNCfC9/reshot-icon-wallet-9-H3-QMSDLFR.png",
+        //       logoLight:
+        //         "https://i.ibb.co/kDNCfC9/reshot-icon-wallet-9-H3-QMSDLFR.png",
+        //     },
+        //     useWalletConnect: true,
+        //     enableLogging: true,
+        //   },
+        //   });
 
-          let user = await web3auth.getUserInfo();
-          console.log("user ", user);
-          if (
-            user.name &&
-            user.name !== null &&
-            user.name !== " " &&
-            user.name !== ""
-          )
-            setUserName(user.name);
+        //   await web3auth.addPlugin(torusPlugin);
+        //   setTorusPlugin(torusPlugin);
 
-          if (
-            user.profileImage &&
-            user.profileImage !== null &&
-            user.profileImage !== " " &&
-            user.profileImage !== ""
-          )
-            setProfileImage(user.profileImage);
-        }
+        //   await web3auth.configureAdapter(openloginAdapter);
+        //   setWeb3auth(web3auth);
 
-        await fetchAllTweets();
+        //   await web3auth.init();
+        //   if (web3auth.provider) {
+        //     await setProvider(web3auth.provider);
+
+        //     let user = await web3auth.getUserInfo();
+        //     console.log("user ", user);
+        //     if (
+        //       user.name &&
+        //       user.name !== null &&
+        //       user.name !== " " &&
+        //       user.name !== ""
+        //     )
+        //       setUserName(user.name);
+
+        //     if (
+        //       user.profileImage &&
+        //       user.profileImage !== null &&
+        //       user.profileImage !== " " &&
+        //       user.profileImage !== ""
+        //     )
+        //       setProfileImage(user.profileImage);
+        //   }
+
+        //   await fetchAllTweets();
       } catch (error) {
         console.error(error);
       }
     };
     init();
   }, []);
+
   const logout = async () => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
@@ -141,21 +162,24 @@ function App() {
       return;
     }
 
-    const web3authProvider = await web3auth.connectTo(
-      WALLET_ADAPTERS.OPENLOGIN,
-      {
-        loginProvider: "jwt",
-        extraLoginOptions: {
-          domain: APP_CONSTANTS.AUTH0_DOMAIN, // Please append "https://" before your domain
-          verifierIdField: "sub",
-        },
-      }
-    );
+    // const web3authProvider = await web3auth.connectTo(
+    //   WALLET_ADAPTERS.OPENLOGIN,
+    //   {
+    //     loginProvider: "jwt",
+    //     extraLoginOptions: {
+    //       domain: APP_CONSTANTS.AUTH0_DOMAIN, // Please append "https://" before your domain
+    //       verifierIdField: "sub",
+    //     },
+    //   }
+    // );
+
+    const web3authProvider = await web3auth.connect();
 
     setProvider(web3authProvider);
 
     if (web3authProvider) {
       let user = await web3auth.getUserInfo();
+      console.log(user);
 
       if (
         user.name &&
@@ -172,6 +196,21 @@ function App() {
         user.profileImage !== ""
       )
         setProfileImage(user.profileImage);
+
+      const rpc = new RPC(web3authProvider);
+      const accounts = await rpc.getAccounts();
+      console.log(accounts, await rpc.getChainId());
+
+      //Assuming user is already logged in.
+      const getPrivateKey = async () => {
+        const privateKey = await web3authProvider.request({
+          method: "eth_private_key",
+        });
+        console.log(privateKey);
+        //Do something with privateKey
+      };
+
+      getPrivateKey();
     }
   };
   /*
