@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import { FaComment, FaRecycle, FaRetweet, FaThumbsUp } from "react-icons/fa";
 
-import { Web3AuthCore } from "@web3auth/core";
-import { Web3Auth } from "@web3auth/web3auth";
+import { Web3Auth } from "@web3auth/modal";
 import {
   WALLET_ADAPTERS,
   CHAIN_NAMESPACES,
   SafeEventEmitterProvider,
 } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+import { MetamaskAdapter } from "@web3auth/metamask-adapter";
 import { TorusWalletConnectorPlugin } from "@web3auth/torus-wallet-connector-plugin";
+import {
+  WalletConnectV2Adapter,
+  getWalletConnectV2Settings,
+} from "@web3auth/wallet-connect-v2-adapter";
 import Twitter from "./twitter";
 
 import RPC from "./evm";
@@ -58,60 +62,89 @@ function App() {
             chainNamespace: "eip155",
             chainId: "0x13881", // hex of 80001, polygon testnet
             rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
-            // Avoid using public rpcTarget in production.
-            // Use services like Infura, Quicknode etc
-            displayName: "Polygon Mumbai Testnet",
-            blockExplorer: "https://mumbai.polygonscan.com/",
-            ticker: "MATIC",
-            tickerName: "Matic",
           },
+          uiConfig: {
+            version: "",
+            // appName: "W3A",
+            appLogo: "https://web3auth.io/images/w3a-L-Favicon-1.svg", // Your App Logo Here
+            theme: "light",
+            loginMethodsOrder: ["apple", "google", "twitter"],
+            // defaultLanguage: "en", // en, de, ja, ko, zh, es, fr, pt, nl
+            // loginGridCol: 3,
+            // primaryButton: "externalLogin", // "externalLogin" | "socialLogin" | "emailLogin"
+          },
+          web3AuthNetwork: "cyan",
         });
 
         setWeb3auth(web3auth);
         await web3auth.initModal();
 
+        const metamaskAdapter = new MetamaskAdapter({
+          clientId,
+          sessionTime: 3600, // 1 hour in seconds
+          web3AuthNetwork: "cyan",
+          chainConfig: {
+            chainNamespace: CHAIN_NAMESPACES.EIP155,
+            chainId: "0x13881",
+            rpcTarget: "https://rpc.ankr.com/polygon_mumbai", // This is the public RPC we have added, please pass on your own endpoint while creating an app
+          },
+        });
+        // we can change the above settings using this function
+
+        // OPENLOGIN + TORUS PLUGIN
         // const openloginAdapter = new OpenloginAdapter({
+        //   loginSettings: {
+        //     mfaLevel: "optional",
+        //   },
         //   adapterSettings: {
-        //     clientId,
-        //     network: "testnet",
-        //     uxMode: "popup",
         //     whiteLabel: {
-        //       name: "TwitterVerse-1.0",
-        //       logoLight: APP_CONSTANTS.APP_LOGO,
-        //       logoDark: APP_CONSTANTS.APP_LOGO,
-        //       defaultLanguage: "en",
-        //       dark: true, // whether to enable dark mode. defaultValue: false
+        //       name: "Your app Name",
+        //       logoLight: "https://web3auth.io/images/w3a-L-Favicon-1.svg",
+        //       logoDark: "https://web3auth.io/images/w3a-D-Favicon-1.svg",
+        //       defaultLanguage: "en", // en, de, ja, ko, zh, es, fr, pt, nl
+        //       dark: false, // whether to enable dark mode. defaultValue: false
         //     },
-        //     loginConfig: {
-        //       // Add login configs corresponding to the providers on modal
-        //       // Twitter login
-        //       jwt: {
-        //         name: "Custom Auth Login",
-        //         verifier: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_VERIFIER, // Please create a verifier on the developer dashboard and pass the name here
-        //         typeOfLogin: "twitter", // Pass on the login provider of the verifier you've created
-        //         clientId: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_ID, // Pass on the clientId of the login provider here - Please note this differs from the Web3Auth ClientID. This is the JWT Client ID
+        //     mfaSettings: {
+        //       deviceShareFactor: {
+        //         enable: true,
+        //         priority: 1,
+        //         mandatory: true,
         //       },
-        //       // Add other login providers here
+        //       backUpShareFactor: {
+        //         enable: true,
+        //         priority: 2,
+        //         mandatory: false,
+        //       },
+        //       socialBackupFactor: {
+        //         enable: true,
+        //         priority: 3,
+        //         mandatory: false,
+        //       },
+        //       passwordFactor: {
+        //         enable: true,
+        //         priority: 4,
+        //         mandatory: false,
+        //       },
         //     },
         //   },
         // });
+        // web3auth.configureAdapter(openloginAdapter);
+        web3auth.configureAdapter(metamaskAdapter);
+
         // const torusPlugin = new TorusWalletConnectorPlugin({
         //   torusWalletOpts: {},
         //   walletInitOptions: {
         //     whiteLabel: {
-        //       theme: { isDark: true, colors: { primary: "#ffffff" } },
-        //       logoDark:
-        //         "https://i.ibb.co/kDNCfC9/reshot-icon-wallet-9-H3-QMSDLFR.png",
-        //       logoLight:
-        //         "https://i.ibb.co/kDNCfC9/reshot-icon-wallet-9-H3-QMSDLFR.png",
+        //       theme: { isDark: true, colors: { primary: "#00a8ff" } },
+        //       logoDark: "https://web3auth.io/images/w3a-L-Favicon-1.svg",
+        //       logoLight: "https://web3auth.io/images/w3a-D-Favicon-1.svg",
         //     },
         //     useWalletConnect: true,
         //     enableLogging: true,
         //   },
-        //   });
-
-        //   await web3auth.addPlugin(torusPlugin);
-        //   setTorusPlugin(torusPlugin);
+        // });
+        // await web3auth.addPlugin(torusPlugin);
+        // setTorusPlugin(torusPlugin);
 
         //   await web3auth.configureAdapter(openloginAdapter);
         //   setWeb3auth(web3auth);
@@ -140,6 +173,7 @@ function App() {
         //   }
 
         //   await fetchAllTweets();
+        setWeb3auth(web3auth);
       } catch (error) {
         console.error(error);
       }
@@ -174,26 +208,29 @@ function App() {
     // );
 
     const web3authProvider = await web3auth.connect();
+    // await web3auth.authenticateUser();
 
     setProvider(web3authProvider);
 
+    // const idToken = await web3auth.authenticateUser();
+
     if (web3authProvider) {
-      let user = await web3auth.getUserInfo();
+      const user = await web3auth.getUserInfo();
       console.log(user);
 
       if (
-        user.name &&
-        user.name !== null &&
-        user.name !== " " &&
-        user.name !== ""
+        user?.name &&
+        user?.name !== null &&
+        user?.name !== " " &&
+        user?.name !== ""
       )
         setUserName(user.name);
 
       if (
-        user.profileImage &&
-        user.profileImage !== null &&
-        user.profileImage !== " " &&
-        user.profileImage !== ""
+        user?.profileImage &&
+        user?.profileImage !== null &&
+        user?.profileImage !== " " &&
+        user?.profileImage !== ""
       )
         setProfileImage(user.profileImage);
 
@@ -263,7 +300,7 @@ function App() {
     }
   };
 
-  const addNewTweet = (e: any) => {
+  const addNewTweet = async (e: any) => {
     e.preventDefault();
     if (!provider) {
       console.log("provider not initialized yet");
@@ -272,15 +309,20 @@ function App() {
 
     try {
       const rpc = new RPC(provider);
+      console.log(provider);
+      const res = await rpc.sendWriteTweetTransaction(
+        newTweetName,
+        newTweetDescription
+      );
+      console.log(res);
+      // setTimeout(function () {
+      //   fetchAllTweets();
+      // }, refreshTime);
+
+      // fetchAllTweets();
       toast.success("Tweet added successfully", {
         position: toast.POSITION.TOP_CENTER,
       });
-      rpc.sendWriteTweetTransaction(newTweetName, newTweetDescription);
-      setTimeout(function () {
-        fetchAllTweets();
-      }, refreshTime);
-
-      fetchAllTweets();
     } catch (error) {
       toast.error("Something went wrong", {
         position: toast.POSITION.TOP_LEFT,

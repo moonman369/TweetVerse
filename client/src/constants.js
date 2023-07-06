@@ -1,6 +1,6 @@
 export const APP_CONSTANTS = {
   ALCHEMY_KEY:
-    "wss://virulent-red-tent.matic-testnet.discover.quiknode.pro/4e1afeddceb33ecded6e34b04d18bf4539ab6df8/",
+    "https://polygon-mumbai.g.alchemy.com/v2/EDXLLGm2BeMMMizIvRDfC52iShXYHaiB",
   CONTRACT_ADDRESS: "0x03EEe58C59bCF52BcA8E77fb788370FE3FdA0Bb7",
   OPENSEA_ASSETS_URL: "https://testnets.opensea.io/assets/mumbai",
   CLIENT_ID:
