@@ -64,7 +64,7 @@ function App() {
             rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
           },
           uiConfig: {
-            version: "",
+            // version: "",
             // appName: "W3A",
             appLogo: "https://web3auth.io/images/w3a-L-Favicon-1.svg", // Your App Logo Here
             theme: "light",
