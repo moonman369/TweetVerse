@@ -246,7 +246,7 @@ function App() {
         const privateKey = await web3authProvider.request({
           method: "eth_private_key",
         });
-        console.log(privateKey);
+        // console.log(privateKey);
         //Do something with privateKey
       };
 
@@ -281,7 +281,7 @@ function App() {
     try {
       let fetchedTweets = await rpc.getAllTweets();
       let tweets = [...fetchedTweets];
-      console.log(tweets);
+      // console.log(tweets);
       setTweets(tweets.reverse());
     } catch (error) {
       console.log("error in fetching tweets", error);
