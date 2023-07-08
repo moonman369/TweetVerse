@@ -22,7 +22,10 @@ function Comments(props: any) {
             ></textarea>
             <button
               className="btn twitter-bg"
-              onClick={(event) => props.addComment(event, props.count)}
+              onClick={(event) =>
+                props.addComment(event, props.length - 1 - props.count)
+              }
+              // (event) => props.addComment(event, props.count)
             >
               Tweet
             </button>

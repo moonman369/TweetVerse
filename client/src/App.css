@@ -311,7 +311,8 @@ svg {
   float: left;
   width: 100%;
   padding-left: 0;
-  border-bottom: 1px solid #3a3a3a;
+  border-top: 1px solid #505050;
+  border-bottom: 1px solid #505050;
   padding-right: 0;
   padding-top: 0;
   padding-bottom: 0;
@@ -391,7 +392,7 @@ svg {
 .trendings a {
   float: left;
   width: 100%;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid #353434;
   text-decoration: none;
   padding: 12px 0;
   color: #e4e4e4;
@@ -467,10 +468,10 @@ svg {
   max-width: 400px;
 }
 .tweet-list.thread {
-  border-top: 1px solid #e8ecec;
+  /* border-top: 1px solid #3a3a3a; */
   padding-top: 20px;
   margin-top: 0;
-  background: #f5f5f5;
+  background: #0e0e0e;
 }
 .tweet-actions a:hover,
 .tweet-actions button:hover {
@@ -482,7 +483,7 @@ svg {
 }
 .add-tweet.reply-tweet {
   flex-direction: column;
-  background: #f5f5f5;
+  background: #0e0e0e;
   margin-top: 0;
   padding-bottom: 20px;
   position: relative;
@@ -493,7 +494,7 @@ svg {
 }
 .add-tweet.reply-tweet > span a {
   text-decoration: none;
-  color: #000;
+  color: #ece7e7;
 }
 .add-tweet.reply-tweet .tweet-form {
   padding: 0;
@@ -503,7 +504,7 @@ svg {
   position: absolute;
   left: 42px;
   top: -17px;
-  border-bottom: 23px solid #f5f5f5;
+  border-bottom: 23px solid #0e0e0e;
   border-left: 23px solid transparent;
   border-right: 0px solid transparent;
   content: "";
@@ -512,6 +513,7 @@ svg {
   width: 40px;
   height: 40px;
   margin-left: 10px;
+  margin-left: 3rem;
 }
 .tweet-list.thread .tweet-content h5 {
   font-size: 15px;
@@ -523,6 +525,6 @@ svg {
   color: #666;
 }
 .tweet-list.thread .tweet-content > span a {
-  color: #000;
+  color: #b8b5b5;
   text-decoration: none;
 }

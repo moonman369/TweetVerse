@@ -49,7 +49,11 @@ function TweetListings(props: any) {
                       </svg>
                       1
                     </a>
-                    <button onClick={(event) => props.upVote(i)}>
+                    <button
+                      onClick={(event) =>
+                        props.upVote((props.tweets.length || 0) - 1 - i)
+                      }
+                    >
                       <svg
                         viewBox="0 0 24 24"
                         aria-hidden="true"
@@ -89,6 +93,7 @@ function TweetListings(props: any) {
               {show ? (
                 <Comments
                   tweet={tweet}
+                  length={props.tweets.length}
                   count={i}
                   handleCommentChange={props.handleCommentChange}
                   addComment={props.addComment}

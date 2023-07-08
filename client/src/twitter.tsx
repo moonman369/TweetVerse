@@ -27,6 +27,7 @@ function Twitter(props: any) {
           ></AddTweet>
           <TweetListings
             tweets={props.tweets}
+            // length={props.tweets.length}
             upVote={props.upVote}
             handleCommentChange={props.handleCommentChange}
             addComment={props.addComment}

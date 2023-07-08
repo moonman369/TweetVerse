@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
 import { Card, Form } from "react-bootstrap";
 import { FaComment, FaRecycle, FaRetweet, FaThumbsUp } from "react-icons/fa";
 
@@ -42,6 +43,8 @@ function App() {
   const refreshTime = APP_CONSTANTS.REACT_APP_REFRESH_TIMER * 1000;
   const [torusPlugin, setTorusPlugin] =
     useState<TorusWalletConnectorPlugin | null>(null);
+  // const titleRef = useRef(null);
+  // const descRef = useRef(null);
 
   useEffect(() => {
     const init = async () => {
@@ -278,6 +281,7 @@ function App() {
     try {
       let fetchedTweets = await rpc.getAllTweets();
       let tweets = [...fetchedTweets];
+      console.log(tweets);
       setTweets(tweets.reverse());
     } catch (error) {
       console.log("error in fetching tweets", error);
@@ -292,7 +296,8 @@ function App() {
 
     try {
       const rpc = new RPC(provider);
-      await rpc.sendUpVoteTransaction(tweetIndex);
+      const res = await rpc.sendUpVoteTransaction(tweetIndex);
+      console.log(res);
 
       fetchAllTweets();
     } catch (error) {
@@ -302,6 +307,7 @@ function App() {
 
   const addNewTweet = async (e: any) => {
     e.preventDefault();
+    // e;
     if (!provider) {
       console.log("provider not initialized yet");
       return;
@@ -319,7 +325,10 @@ function App() {
       //   fetchAllTweets();
       // }, refreshTime);
 
-      // fetchAllTweets();
+      fetchAllTweets();
+      // titleRef.current.value = "";
+      // descRef.current.value = "";
+
       toast.success("Tweet added successfully", {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -344,6 +353,7 @@ function App() {
       toast.success("Comment added successfully - refresh after 30 sec", {
         position: toast.POSITION.TOP_CENTER,
       });
+      console.log(comment, tweetIndex);
       await rpc.sendAddCommentTransaction(tweetIndex, comment);
       fetchAllTweets();
     } catch (error) {
@@ -381,6 +391,8 @@ function App() {
 
             <Form.Control
               as="input"
+              type="reset"
+              // ref={titleRef}
               onChange={handleNewTweetNameChange}
               placeholder="Tweet Name"
             />
@@ -388,6 +400,8 @@ function App() {
             <br></br>
             <Form.Control
               as="textarea"
+              type="reset"
+              // ref={descRef}
               onChange={handleNewTweetDescriptionChange}
               placeholder="Description"
             />

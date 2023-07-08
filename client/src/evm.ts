@@ -6,12 +6,16 @@ import { APP_CONSTANTS } from "./constants";
 
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 
+const contractABI = require("./contract-abi.json");
+const contractAddress = APP_CONSTANTS.CONTRACT_ADDRESS;
+
 export default class EthereumRpc {
   private provider: SafeEventEmitterProvider;
 
   constructor(provider: SafeEventEmitterProvider) {
     this.provider = provider;
   }
+
   async getAccounts(): Promise<string> {
     try {
       const provider = new ethers.providers.Web3Provider(this.provider);
@@ -35,24 +39,27 @@ export default class EthereumRpc {
 
   async sendUpVoteTransaction(tweetIndex: any): Promise<string> {
     try {
-      const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;
-      const web3 = createAlchemyWeb3(alchemyKey);
+      const provider = new ethers.providers.Web3Provider(this.provider);
+      const signer = provider.getSigner();
+      console.log(signer);
 
-      const contractABI = require("./contract-abi.json");
-      const contractAddress = APP_CONSTANTS.CONTRACT_ADDRESS;
-
-      const helloWorldContract = new web3.eth.Contract(
+      const tweetVerse = new ethers.Contract(
+        contractAddress,
         contractABI,
-        contractAddress
+        provider
       );
 
-      let accounts = await this.getAccounts();
-
-      await helloWorldContract.methods
-        .upvote(tweetIndex)
-        .send({ from: accounts[0] });
+      const tx = await tweetVerse.connect(signer).upvote(tweetIndex);
+      const res = await tx.wait();
+      console.log(res);
 
       return "success";
+
+      // await helloWorldContract.methods
+      //   .upvote(tweetIndex)
+      //   .send({ from: accounts[0] });
+
+      // return "success";
     } catch (error) {
       return error as string;
     }
@@ -63,24 +70,21 @@ export default class EthereumRpc {
     comment: any
   ): Promise<string> {
     try {
-      const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;
-      const web3 = createAlchemyWeb3(alchemyKey, {
-        writeProvider: this.provider,
-      });
+      const provider = new ethers.providers.Web3Provider(this.provider);
+      const signer = provider.getSigner();
+      console.log(signer);
 
-      const contractABI = require("./contract-abi.json");
-      const contractAddress = APP_CONSTANTS.CONTRACT_ADDRESS;
-
-      const helloWorldContract = new web3.eth.Contract(
+      const tweetVerse = new ethers.Contract(
+        contractAddress,
         contractABI,
-        contractAddress
+        provider
       );
 
-      let accounts = await this.getAccounts();
-
-      await helloWorldContract.methods
-        .addComment(tweetIndex, comment)
-        .send({ from: accounts[0] });
+      const tx = await tweetVerse
+        .connect(signer)
+        .addComment(tweetIndex, comment);
+      const res = await tx.wait();
+      console.log(res);
 
       return "success";
     } catch (error) {
@@ -93,28 +97,9 @@ export default class EthereumRpc {
     tweetDescription: any
   ): Promise<string> {
     try {
-      // const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;
-      // const web3 = createAlchemyWeb3(alchemyKey, {
-      //   writeProvider: this.provider,
-      // });
-
-      const contractABI = require("./contract-abi.json");
-      const contractAddress = APP_CONSTANTS.CONTRACT_ADDRESS;
-
-      // const helloWorldContract = new web3.eth.Contract(
-      //   contractABI,
-      //   contractAddress
-      // );
-
       const provider = new ethers.providers.Web3Provider(this.provider);
-
-      let account = await this.getAccounts();
       const signer = provider.getSigner();
       console.log(signer);
-
-      // await helloWorldContract.methods
-      //   .writeTweet(tweetName, tweetDescription)
-      //   .send({ from: accounts[0] });
 
       const tweetVerse = new ethers.Contract(
         contractAddress,
