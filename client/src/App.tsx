@@ -33,6 +33,7 @@ function App() {
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
     null
   );
+  const [account, setAccount] = useState<string | "">("");
   const [tweets, setTweets] = useState<Array<any> | null>(null);
   const [comment, setComment] = useState<string | "">("");
   const [userName, setUserName] = useState<string | "">("");
@@ -240,6 +241,8 @@ function App() {
 
       const rpc = new RPC(web3authProvider);
       const accounts = await rpc.getAccounts();
+      setAccount(accounts);
+
       console.log(accounts, await rpc.getChainId());
 
       // const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;
@@ -516,6 +519,7 @@ function App() {
       {provider ? (
         <Twitter
           logoutButton={logout}
+          account={account}
           handleNewTweetDescriptionChange={handleNewTweetDescriptionChange}
           handleNewTweetNameChange={handleNewTweetNameChange}
           addNewTweet={addNewTweet}
@@ -523,6 +527,7 @@ function App() {
           tweets={tweets}
           upVote={upVote}
           handleCommentChange={handleCommentChange}
+          provider={provider}
           addComment={addComment}
           refresh={refresh}
           username={userName}

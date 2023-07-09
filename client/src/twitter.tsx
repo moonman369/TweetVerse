@@ -12,7 +12,7 @@ function Twitter(props: any) {
   return (
     <>
       <div className="twitter-main">
-        <Leftbar signout={props.logoutButton}></Leftbar>
+        <Leftbar signout={props.logoutButton} account={props.account}></Leftbar>
         <div className="center">
           <AddTweet
             handleNewTweetDescriptionChange={
