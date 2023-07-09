@@ -60,8 +60,9 @@ export default class EthereumRpc {
       //   .send({ from: accounts[0] });
 
       // return "success";
-    } catch (error) {
-      return error as string;
+    } catch (error: any) {
+      // console.log(error.reason);
+      return error.reason;
     }
   }
 
@@ -87,8 +88,8 @@ export default class EthereumRpc {
       console.log(res);
 
       return "success";
-    } catch (error) {
-      return error as string;
+    } catch (error: any) {
+      return error.reason;
     }
   }
 
@@ -115,8 +116,9 @@ export default class EthereumRpc {
       console.log(res);
 
       return "success";
-    } catch (error) {
-      return error as string;
+    } catch (error: any) {
+      // console.log(error.message);
+      return error.reason;
     }
   }
 

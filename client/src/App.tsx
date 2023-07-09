@@ -24,6 +24,7 @@ import { APP_CONSTANTS } from "./constants";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
 
@@ -241,11 +242,17 @@ function App() {
       const accounts = await rpc.getAccounts();
       console.log(accounts, await rpc.getChainId());
 
+      // const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;
+      // const web3 = createAlchemyWeb3(alchemyKey, {
+      //   writeProvider: web3authProvider,
+      // });
+
       //Assuming user is already logged in.
       const getPrivateKey = async () => {
         const privateKey = await web3authProvider.request({
           method: "eth_private_key",
         });
+        // console.log(web3.eth.accounts.privateKeyToAccount(`${privateKey}`));
         // console.log(privateKey);
         //Do something with privateKey
       };
@@ -299,7 +306,16 @@ function App() {
       const res = await rpc.sendUpVoteTransaction(tweetIndex);
       console.log(res);
 
-      fetchAllTweets();
+      if (res === "success") {
+        toast.success("Upvote added successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        fetchAllTweets();
+      } else {
+        toast.error(res.replace("execution reverted: ", ""), {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     } catch (error) {
       console.log("failed to execute upvote transaction", error);
     }
@@ -325,13 +341,18 @@ function App() {
       //   fetchAllTweets();
       // }, refreshTime);
 
-      fetchAllTweets();
       // titleRef.current.value = "";
       // descRef.current.value = "";
-
-      toast.success("Tweet added successfully", {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      if (res === "success") {
+        fetchAllTweets();
+        toast.success("Tweet added successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } else {
+        toast.error(res.replace("execution reverted: ", ""), {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     } catch (error) {
       toast.error("Something went wrong", {
         position: toast.POSITION.TOP_LEFT,
@@ -349,13 +370,18 @@ function App() {
 
     try {
       const rpc = new RPC(provider);
-
-      toast.success("Comment added successfully - refresh after 30 sec", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      console.log(comment, tweetIndex);
-      await rpc.sendAddCommentTransaction(tweetIndex, comment);
-      fetchAllTweets();
+      // console.log(comment, tweetIndex);
+      const res = await rpc.sendAddCommentTransaction(tweetIndex, comment);
+      if (res === "success") {
+        toast.success("Comment added successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        fetchAllTweets();
+      } else {
+        toast.error(res.replace("execution reverted: ", ""), {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     } catch (error) {
       toast.error("Something went wrong", {
         position: toast.POSITION.TOP_LEFT,
