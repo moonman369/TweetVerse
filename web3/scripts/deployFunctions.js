@@ -5,7 +5,7 @@ require("dotenv").config();
 const deployTwitterVerse = async (deployerAddress, baseUri) => {
   const deployer = await ethers.getSigner(deployerAddress);
 
-  const TwitterVerse = await ethers.getContractFactory("TwitterVerse");
+  const TwitterVerse = await ethers.getContractFactory("TweetVerse");
 
   const twitterVerse = await TwitterVerse.connect(deployer).deploy(baseUri);
 
