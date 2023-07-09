@@ -82,7 +82,7 @@ export default class EthereumRpc {
 
       const tx = await tweetVerse
         .connect(signer)
-        .addComment(tweetIndex, comment);
+        .postComment(tweetIndex, comment);
       const res = await tx.wait();
       console.log(res);
 
@@ -109,7 +109,7 @@ export default class EthereumRpc {
 
       const tx = await tweetVerse
         .connect(signer)
-        .writeTweet(tweetName, tweetDescription);
+        .postTweet(tweetName, tweetDescription);
 
       const res = await tx.wait();
       console.log(res);
@@ -135,7 +135,23 @@ export default class EthereumRpc {
         contractAddress
       );
 
-      return await helloWorldContract.methods.getAllTweets().call();
+      const tweets = await helloWorldContract.methods.getAllTweets().call();
+      var formattedTweets = [];
+      for (let tweet of tweets) {
+        const fetchedComments = await helloWorldContract.methods
+          .getCommenstByTweetId(tweet?.id)
+          .call();
+        formattedTweets.push({ ...tweet, comments: fetchedComments });
+      }
+      // tweets.map(async (tweet: any) => {
+      //   const fetchedComments = await helloWorldContract.methods
+      //     .getCommenstByTweetId(tweet?.id)
+      //     .call();
+      //   return { ...tweet, comments: fetchedComments };
+      // });
+      return formattedTweets;
+
+      // return await helloWorldContract.methods.getAllTweets().call();
     } catch (error) {
       return [];
     }

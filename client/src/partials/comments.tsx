@@ -8,7 +8,7 @@ function Comments(props: any) {
           Reply to{" "}
           <a href="#!" title="">
             {" "}
-            @{props.tweet.fromAddress.replace(/(.{9})..+/, "$1...")}
+            @{props.tweet.author.replace(/(.{9})..+/, "$1...")}
           </a>
         </span>
         <div className="tweet-form">
@@ -39,17 +39,17 @@ function Comments(props: any) {
           <div className="tweet-content">
             <h5>
               <a href="#!" title="">
-                @{props.tweet.fromAddress.replace(/(.{9})..+/, "$1...")}
+                @{comment.author.replace(/(.{9})..+/, "$1...")}
               </a>
             </h5>
             <span>
               Replying to{" "}
               <a href="#!" title="">
                 {" "}
-                @{props.tweet.fromAddress.replace(/(.{9})..+/, "$1...")}
+                @{props.tweet.author.replace(/(.{9})..+/, "$1...")}
               </a>
             </span>
-            <p>{comment}</p>
+            <p>{comment.content}</p>
           </div>
         </div>
       ))}

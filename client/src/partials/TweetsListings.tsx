@@ -15,7 +15,7 @@ function TweetListings(props: any) {
                 <div className="tweet-content">
                   <h5>
                     <a href="#!" title="">
-                      {tweet.fromAddress.replace(/(.{9})..+/, "$1...")}{" "}
+                      {tweet.author.replace(/(.{9})..+/, "$1...")}{" "}
                       <strong>@{tweet.name}</strong>
                     </a>
                   </h5>

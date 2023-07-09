@@ -281,8 +281,8 @@ function App() {
     try {
       let fetchedTweets = await rpc.getAllTweets();
       let tweets = [...fetchedTweets];
-      // console.log(tweets);
-      setTweets(tweets.reverse());
+      console.log(tweets);
+      setTweets([...tweets.reverse()]);
     } catch (error) {
       console.log("error in fetching tweets", error);
     }
@@ -425,7 +425,7 @@ function App() {
                     <FaThumbsUp onClick={(event) => upVote(i)} /> {tweet.name}
                   </Card.Title>
                   <p>Total Upvotes: {tweet.upvotes}</p>
-                  <p>Tweeted by: {tweet.fromAddress}</p>
+                  <p>Tweeted by: {tweet.author}</p>
                   <Card.Text>{tweet.description}</Card.Text>
 
                   <div>
