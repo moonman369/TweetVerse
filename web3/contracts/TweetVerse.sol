@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
-contract TweetVerse is ERC721("TwitterVerse", "TVRS") {
+contract TweetVerse is ERC721("TweetVerse", "TWVS") {
 
     using Strings for uint256;
     using Counters for Counters.Counter;
