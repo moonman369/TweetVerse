@@ -1,6 +1,6 @@
 //for leftbar.tsx
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { json } from "stream/consumers";
 
 function Leftbar(props: any) {
@@ -17,7 +17,7 @@ function Leftbar(props: any) {
         <nav>
           <ul>
             <li>
-              <a href="#!" title="">
+              <a href="/" title="">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -32,7 +32,7 @@ function Leftbar(props: any) {
               </a>
             </li>
             <li>
-              <a href="#!" title="">
+              <a href="/" title="">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -46,7 +46,7 @@ function Leftbar(props: any) {
               </a>
             </li>
             <li>
-              <a href="#!" title="">
+              <a href="/" title="">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -60,7 +60,7 @@ function Leftbar(props: any) {
               </a>
             </li>
             <li>
-              <a href="#!" title="">
+              <a href="/" title="">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -112,7 +112,7 @@ function Leftbar(props: any) {
             </li>
           </ul>
         </nav>
-        <a href="#!" title="" className="twitter-bg btn">
+        <a href="/" title="" className="twitter-bg btn">
           {" "}
           Tweet
         </a>
