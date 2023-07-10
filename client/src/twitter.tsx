@@ -7,12 +7,18 @@ import Trends from "./partials/trends";
 
 function Twitter(props: any) {
   useEffect(() => {
-    props.fetchAllTweets();
-  }, [""]);
+    if (props.provider) {
+      props.fetchAllTweets();
+    }
+  }, [props.provider]);
   return (
     <>
       <div className="twitter-main">
-        <Leftbar signout={props.logoutButton} account={props.account}></Leftbar>
+        <Leftbar
+          signout={props.logoutButton}
+          account={props.account}
+          provider={props.provider}
+        ></Leftbar>
         <div className="center">
           <AddTweet
             handleNewTweetDescriptionChange={
@@ -31,6 +37,7 @@ function Twitter(props: any) {
             upVote={props.upVote}
             handleCommentChange={props.handleCommentChange}
             addComment={props.addComment}
+            provider={props.provider}
           ></TweetListings>
         </div>
         <div className="rightbar">

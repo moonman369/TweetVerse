@@ -25,10 +25,14 @@ import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3";
+import { useLocation } from "react-router-dom";
+import { profile } from "console";
 
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
 
 function App() {
+  const location = useLocation();
+
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
     null
@@ -46,7 +50,7 @@ function App() {
   const [torusPlugin, setTorusPlugin] =
     useState<TorusWalletConnectorPlugin | null>(null);
   // const titleRef = useRef(null);
-  // const descRef = useRef(null);
+  // const descRef = useRef(null);\
 
   useEffect(() => {
     const init = async () => {
@@ -81,19 +85,18 @@ function App() {
           web3AuthNetwork: "cyan",
         });
 
-        setWeb3auth(web3auth);
-        await web3auth.initModal();
+        console.log(web3auth);
 
-        const metamaskAdapter = new MetamaskAdapter({
-          clientId,
-          sessionTime: 3600, // 1 hour in seconds
-          web3AuthNetwork: "cyan",
-          chainConfig: {
-            chainNamespace: CHAIN_NAMESPACES.EIP155,
-            chainId: "0x13881",
-            rpcTarget: "https://rpc.ankr.com/polygon_mumbai", // This is the public RPC we have added, please pass on your own endpoint while creating an app
-          },
-        });
+        // const metamaskAdapter = new MetamaskAdapter({
+        //   clientId,
+        //   sessionTime: 3600, // 1 hour in seconds
+        //   web3AuthNetwork: "cyan",
+        //   chainConfig: {
+        //     chainNamespace: CHAIN_NAMESPACES.EIP155,
+        //     chainId: "0x13881",
+        //     rpcTarget: "https://rpc.ankr.com/polygon_mumbai", // This is the public RPC we have added, please pass on your own endpoint while creating an app
+        //   },
+        // });
         // we can change the above settings using this function
 
         // OPENLOGIN + TORUS PLUGIN
@@ -134,7 +137,7 @@ function App() {
         //   },
         // });
         // web3auth.configureAdapter(openloginAdapter);
-        web3auth.configureAdapter(metamaskAdapter);
+        // web3auth.configureAdapter(metamaskAdapter);
 
         // const torusPlugin = new TorusWalletConnectorPlugin({
         //   torusWalletOpts: {},
@@ -177,8 +180,9 @@ function App() {
         //       setProfileImage(user.profileImage);
         //   }
 
-        //   await fetchAllTweets();
+        // await fetchAllTweets();
         setWeb3auth(web3auth);
+        await web3auth.initModal();
       } catch (error) {
         console.error(error);
       }
@@ -186,13 +190,45 @@ function App() {
     init();
   }, []);
 
+  useEffect(() => {
+    console.log(location?.state?.fromProfile);
+    if (location?.state?.fromProfile) {
+      if (web3auth) {
+        const getAndSetProvider = async () => {
+          const provider = await web3auth.connect();
+          setProvider(provider);
+        };
+        getAndSetProvider();
+      }
+      if (localStorage.getItem("user")) {
+        const { name, profileImage } = JSON.parse(
+          localStorage.getItem("user") || ""
+        );
+        setUserName(name);
+        setProfileImage(profileImage);
+      }
+      if (localStorage.getItem("account")) {
+        setAccount(localStorage.getItem("account") || "");
+      }
+      // fetchAllTweets();
+    }
+  }, [web3auth]);
+
+  // useEffect(() => {
+  //   if (provider) {
+  //     fetchAllTweets();
+  //   }
+  // }, [provider]);
+
   const logout = async () => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
     }
     await web3auth.logout();
+    location.state.fromProfile = null;
     setProvider(null);
+    localStorage.clear();
   };
 
   const login = async () => {
@@ -220,7 +256,13 @@ function App() {
     // const idToken = await web3auth.authenticateUser();
 
     if (web3authProvider) {
+      console.log(web3authProvider);
+      setProvider(web3authProvider);
+
+      // localStorage.clear();
       const user = await web3auth.getUserInfo();
+
+      localStorage.setItem("user", JSON.stringify(user));
       console.log(user);
 
       if (
@@ -241,6 +283,7 @@ function App() {
 
       const rpc = new RPC(web3authProvider);
       const accounts = await rpc.getAccounts();
+      localStorage.setItem("account", accounts);
       setAccount(accounts);
 
       console.log(accounts, await rpc.getChainId());
@@ -418,8 +461,8 @@ function App() {
             <Card.Title>What are you thinking? Tweet it out!</Card.Title>
             <Card.Text></Card.Text>
 
-            <Form.Control
-              as="input"
+            <input
+              // as="input"
               type="reset"
               // ref={titleRef}
               onChange={handleNewTweetNameChange}
@@ -427,9 +470,9 @@ function App() {
             />
             <br></br>
             <br></br>
-            <Form.Control
-              as="textarea"
-              type="reset"
+            <textarea
+              // as="textarea"
+              // type="reset"
               // ref={descRef}
               onChange={handleNewTweetDescriptionChange}
               placeholder="Description"
@@ -516,7 +559,7 @@ function App() {
 
   return (
     <div className="grid">
-      {provider ? (
+      {provider || location?.state?.fromProfile ? (
         <Twitter
           logoutButton={logout}
           account={account}

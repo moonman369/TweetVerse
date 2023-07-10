@@ -1,9 +1,11 @@
 //for leftbar.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { json } from "stream/consumers";
 
 function Leftbar(props: any) {
   const navigate = useNavigate();
+  //   console.log(JSON.stringify(props.provider));
   return (
     <>
       <div className="leftbar">
@@ -73,10 +75,12 @@ function Leftbar(props: any) {
             </li>
             <li
               onClick={() => {
-                navigate(`/myprofile/${props.account}`);
+                navigate(`/myprofile/${props.account}`, {
+                  state: { fromApp: 1 },
+                });
               }}
             >
-              <a href="" title="">
+              <a>
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"

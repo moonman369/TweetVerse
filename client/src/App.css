@@ -528,3 +528,12 @@ svg {
   color: #b8b5b5;
   text-decoration: none;
 }
+
+/*=================================================PROFILE=================================================*/
+
+.profile > img {
+  float: left;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
