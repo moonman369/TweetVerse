@@ -48,6 +48,15 @@ body {
   -webkit-tap-highlight-color: rgba(211, 211, 211, 0);
   overflow-x: hidden;
 }
+
+.no-scroll {
+  overflow: hidden;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
 hr {
   margin: 1rem 0;
   color: inherit;
@@ -531,7 +540,41 @@ svg {
   text-decoration: none;
 }
 
+.overlay {
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  /* backdrop-filter: blur(6px); */
+  background-color: #0e0e0e9c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-y: hidden;
+}
+
+.overlay > img {
+  height: 80px;
+  width: 80px;
+}
+
+.hidden {
+  display: none;
+}
+
 /*=================================================PROFILE=================================================*/
+
+.profile-center {
+  border-left: 1px solid #3a3a3a;
+  border-right: 1px solid #3a3a3a;
+  float: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
 .profile-main {
   width: 1300px;
@@ -569,19 +612,74 @@ svg {
   padding-bottom: 40px;
 }
 
+.profile-info-container {
+  margin-top: 2rem;
+  margin-left: 1rem;
+  /* display: flex; */
+}
+
 .profile-info {
+  margin-top: 2rem;
   float: left;
-  width: max-content;
+  width: 350px;
+  height: 40px;
   border: 1px solid #3a3a3a;
-  border-radius: 20px;
-  padding: 14px 20px;
+  border-radius: 10px 0 0 10px;
+  padding-top: 8px;
+  overflow: hidden;
+  /* padding-bottom: 20px; */
+  padding-left: 12px;
   font-size: 16px;
   margin-bottom: 9px;
   background: #1f1f1f;
   color: #bebebe;
   display: flex;
+  justify-content: space-between;
 }
 
-.profile-info > button {
-  margin-left: 1rem;
+.profile-info-block {
+  display: flex;
+  margin-bottom: 3rem;
+  /* display: contents; */
+}
+
+.show-hide-btn {
+  margin-top: 2rem;
+  background: rgba(201, 201, 201, 0.404);
+  border: none;
+  border-radius: 0 10px 10px 0;
+  font-size: larger;
+  padding: 0;
+  width: 55px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.fund-a {
+  margin-left: 3rem;
+  margin-top: 2rem;
+}
+
+.fund-btn {
+  background: #1d9bf0;
+  color: #ece7e7;
+  border: none;
+  border-radius: 10px;
+  /* font-size: larger; */
+  padding-left: 12px;
+  padding-right: 12px;
+  /* width: 55px; */
+  height: 40px;
+  cursor: pointer;
+}
+
+.show-hide-btn.green {
+  color: #1df07c;
+}
+
+.profile-info-field {
+  margin-left: 3rem;
+  margin-top: 2.5rem;
+  margin-right: 3rem;
+  font-size: larger;
 }

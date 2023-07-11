@@ -30,6 +30,8 @@ function Twitter(props: any) {
             refresh={props.refresh}
             username={props.username}
             profileimage={props.profileimage}
+            titleRef={props.titleRef}
+            descRef={props.descRef}
           ></AddTweet>
           <TweetListings
             tweets={props.tweets}

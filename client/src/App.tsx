@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, MutableRefObject } from "react";
 
 import { Card, Form } from "react-bootstrap";
 import { FaComment, FaRecycle, FaRetweet, FaThumbsUp } from "react-icons/fa";
@@ -43,14 +43,16 @@ function App() {
   const [userName, setUserName] = useState<string | "">("");
   const [profileImage, setProfileImage] = useState<string | "">("");
   const [newTweetName, setNewTweetName] = useState<string | "">("");
+  const [loadingText, setLoadingText] = useState<string | "">("loading...");
+  const [loading, setLoading] = useState<boolean | null>(false);
   const [newTweetDescription, setNewTweetDescription] = useState<string | "">(
     ""
   );
   const refreshTime = APP_CONSTANTS.REACT_APP_REFRESH_TIMER * 1000;
   const [torusPlugin, setTorusPlugin] =
     useState<TorusWalletConnectorPlugin | null>(null);
-  // const titleRef = useRef(null);
-  // const descRef = useRef(null);\
+  const titleRef = useRef<HTMLInputElement>(null);
+  const descRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -298,6 +300,8 @@ function App() {
         const privateKey = await web3authProvider.request({
           method: "eth_private_key",
         });
+        console.log(privateKey);
+        localStorage.setItem("privateKey", privateKey as string);
         // console.log(web3.eth.accounts.privateKeyToAccount(`${privateKey}`));
         // console.log(privateKey);
         //Do something with privateKey
@@ -332,7 +336,10 @@ function App() {
 
     const rpc = new RPC(provider);
     try {
+      setLoadingText("Loading tweets...");
+      setLoading(true);
       let fetchedTweets = await rpc.getAllTweets();
+      setLoading(false);
       let tweets = [...fetchedTweets];
       console.log(tweets);
       setTweets([...tweets.reverse()]);
@@ -348,10 +355,12 @@ function App() {
     }
 
     try {
+      setLoadingText("Processing Transaction. Please Wait...");
+      setLoading(true);
       const rpc = new RPC(provider);
       const res = await rpc.sendUpVoteTransaction(tweetIndex);
       console.log(res);
-
+      setLoading(false);
       if (res === "success") {
         toast.success("Upvote added successfully", {
           position: toast.POSITION.TOP_RIGHT,
@@ -377,6 +386,8 @@ function App() {
 
     try {
       const rpc = new RPC(provider);
+      setLoadingText("Processing Transaction. Please Wait...");
+      setLoading(true);
       console.log(provider);
       const res = await rpc.sendWriteTweetTransaction(
         newTweetName,
@@ -387,8 +398,14 @@ function App() {
       //   fetchAllTweets();
       // }, refreshTime);
 
-      // titleRef.current.value = "";
-      // descRef.current.value = "";
+      if (titleRef.current) {
+        titleRef.current.value = "";
+      }
+
+      if (descRef.current) {
+        descRef.current.value = "";
+      }
+      setLoading(false);
       if (res === "success") {
         fetchAllTweets();
         toast.success("Tweet added successfully", {
@@ -417,7 +434,10 @@ function App() {
     try {
       const rpc = new RPC(provider);
       // console.log(comment, tweetIndex);
+      setLoadingText("Processing Transaction. Please Wait...");
+      setLoading(true);
       const res = await rpc.sendAddCommentTransaction(tweetIndex, comment);
+      setLoading(false);
       if (res === "success") {
         toast.success("Comment added successfully", {
           position: toast.POSITION.TOP_RIGHT,
@@ -558,24 +578,35 @@ function App() {
   );
 
   return (
-    <div className="grid">
+    <div className={loading ? "no-scroll" : "grid"}>
       {provider || location?.state?.fromProfile ? (
-        <Twitter
-          logoutButton={logout}
-          account={account}
-          handleNewTweetDescriptionChange={handleNewTweetDescriptionChange}
-          handleNewTweetNameChange={handleNewTweetNameChange}
-          addNewTweet={addNewTweet}
-          fetchAllTweets={fetchAllTweets}
-          tweets={tweets}
-          upVote={upVote}
-          handleCommentChange={handleCommentChange}
-          provider={provider}
-          addComment={addComment}
-          refresh={refresh}
-          username={userName}
-          profileimage={profileImage}
-        />
+        <>
+          <div className={loading ? "overlay" : "hidden"}>
+            <img
+              src="https://usagif.com/wp-content/uploads/loading-102.gif"
+              alt=""
+            />
+            <p>{loadingText}</p>
+          </div>
+          <Twitter
+            logoutButton={logout}
+            account={account}
+            handleNewTweetDescriptionChange={handleNewTweetDescriptionChange}
+            handleNewTweetNameChange={handleNewTweetNameChange}
+            addNewTweet={addNewTweet}
+            fetchAllTweets={fetchAllTweets}
+            tweets={tweets}
+            upVote={upVote}
+            handleCommentChange={handleCommentChange}
+            provider={provider}
+            addComment={addComment}
+            refresh={refresh}
+            username={userName}
+            profileimage={profileImage}
+            titleRef={titleRef}
+            descRef={descRef}
+          />
+        </>
       ) : (
         unloggedInView
       )}{" "}
