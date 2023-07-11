@@ -1,7 +1,8 @@
 //for leftbar.tsx
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { json } from "stream/consumers";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+// import { json } from "stream/consumers";
 
 function Leftbar(props: any) {
   const navigate = useNavigate();
@@ -10,14 +11,18 @@ function Leftbar(props: any) {
     <>
       <div className="leftbar">
         <div className="logo">
-          <a href="#!" title="">
+          <a>
             <img src="../images/twitter.png" alt=""></img>
           </a>
         </div>
         <nav>
           <ul>
-            <li>
-              <a href="/" title="">
+            <li
+              onClick={() => {
+                navigate("/", { state: { fromProfile: 1 } });
+              }}
+            >
+              <a>
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -31,8 +36,20 @@ function Leftbar(props: any) {
                 Home
               </a>
             </li>
+            <li
+              onClick={() => {
+                if (props?.setEnableInfo) {
+                  props.setEnableInfo(true);
+                }
+              }}
+            >
+              <a>
+                <AiOutlineInfoCircle className="info-icon" />
+                Get Started
+              </a>
+            </li>
             <li>
-              <a href="/" title="">
+              <a>
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -46,7 +63,7 @@ function Leftbar(props: any) {
               </a>
             </li>
             <li>
-              <a href="/" title="">
+              <a>
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -60,7 +77,7 @@ function Leftbar(props: any) {
               </a>
             </li>
             <li>
-              <a href="/" title="">
+              <a>
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -94,7 +111,7 @@ function Leftbar(props: any) {
               </a>
             </li>
             <li>
-              <button onClick={props.signout}>
+              <button onClick={props.signout} style={{ cursor: "pointer" }}>
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -112,10 +129,7 @@ function Leftbar(props: any) {
             </li>
           </ul>
         </nav>
-        <a href="/" title="" className="twitter-bg btn">
-          {" "}
-          Tweet
-        </a>
+        <a className="twitter-bg btn"> Tweet</a>
       </div>
     </>
   );

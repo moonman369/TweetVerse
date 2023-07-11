@@ -18,6 +18,7 @@ function Twitter(props: any) {
           signout={props.logoutButton}
           account={props.account}
           provider={props.provider}
+          setEnableInfo={props.setEnableInfo}
         ></Leftbar>
         <div className="center">
           <AddTweet
@@ -39,6 +40,7 @@ function Twitter(props: any) {
             upVote={props.upVote}
             handleCommentChange={props.handleCommentChange}
             addComment={props.addComment}
+            commentRef={props.commentRef}
             provider={props.provider}
           ></TweetListings>
         </div>
