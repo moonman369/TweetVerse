@@ -1,7 +1,7 @@
 export const APP_CONSTANTS = {
   ALCHEMY_KEY:
     "https://polygon-mumbai.g.alchemy.com/v2/EDXLLGm2BeMMMizIvRDfC52iShXYHaiB",
-  CONTRACT_ADDRESS: "0x27e5F9FF172383e65B253c708f3B28E1Bb4C8B31",
+  CONTRACT_ADDRESS: "0x57a549B65791Ed70859c9d531b99Cb6c73252dd7",
   // "0x03EEe58C59bCF52BcA8E77fb788370FE3FdA0Bb7",
   OPENSEA_ASSETS_URL: "https://testnets.opensea.io/assets/mumbai",
   CLIENT_ID:
