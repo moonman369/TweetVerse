@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, MutableRefObject } from "react";
 
 import { Card, Form } from "react-bootstrap";
 import { FaComment, FaRecycle, FaRetweet, FaThumbsUp } from "react-icons/fa";
@@ -24,27 +24,37 @@ import { APP_CONSTANTS } from "./constants";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createAlchemyWeb3 } from "@alch/alchemy-web3";
+import { useLocation } from "react-router-dom";
+import { profile } from "console";
 
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
 
 function App() {
+  const location = useLocation();
+
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
     null
   );
+  const [account, setAccount] = useState<string | "">("");
   const [tweets, setTweets] = useState<Array<any> | null>(null);
   const [comment, setComment] = useState<string | "">("");
   const [userName, setUserName] = useState<string | "">("");
   const [profileImage, setProfileImage] = useState<string | "">("");
   const [newTweetName, setNewTweetName] = useState<string | "">("");
+  const [loadingText, setLoadingText] = useState<string | "">("loading...");
+  const [loading, setLoading] = useState<boolean | null>(false);
+  const [enableInfo, setEnableInfo] = useState<boolean | null>(false);
   const [newTweetDescription, setNewTweetDescription] = useState<string | "">(
     ""
   );
   const refreshTime = APP_CONSTANTS.REACT_APP_REFRESH_TIMER * 1000;
   const [torusPlugin, setTorusPlugin] =
     useState<TorusWalletConnectorPlugin | null>(null);
-  // const titleRef = useRef(null);
-  // const descRef = useRef(null);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const descRef = useRef<HTMLInputElement>(null);
+  const commentRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -79,19 +89,18 @@ function App() {
           web3AuthNetwork: "cyan",
         });
 
-        setWeb3auth(web3auth);
-        await web3auth.initModal();
+        console.log(web3auth);
 
-        const metamaskAdapter = new MetamaskAdapter({
-          clientId,
-          sessionTime: 3600, // 1 hour in seconds
-          web3AuthNetwork: "cyan",
-          chainConfig: {
-            chainNamespace: CHAIN_NAMESPACES.EIP155,
-            chainId: "0x13881",
-            rpcTarget: "https://rpc.ankr.com/polygon_mumbai", // This is the public RPC we have added, please pass on your own endpoint while creating an app
-          },
-        });
+        // const metamaskAdapter = new MetamaskAdapter({
+        //   clientId,
+        //   sessionTime: 3600, // 1 hour in seconds
+        //   web3AuthNetwork: "cyan",
+        //   chainConfig: {
+        //     chainNamespace: CHAIN_NAMESPACES.EIP155,
+        //     chainId: "0x13881",
+        //     rpcTarget: "https://rpc.ankr.com/polygon_mumbai", // This is the public RPC we have added, please pass on your own endpoint while creating an app
+        //   },
+        // });
         // we can change the above settings using this function
 
         // OPENLOGIN + TORUS PLUGIN
@@ -132,7 +141,7 @@ function App() {
         //   },
         // });
         // web3auth.configureAdapter(openloginAdapter);
-        web3auth.configureAdapter(metamaskAdapter);
+        // web3auth.configureAdapter(metamaskAdapter);
 
         // const torusPlugin = new TorusWalletConnectorPlugin({
         //   torusWalletOpts: {},
@@ -175,8 +184,9 @@ function App() {
         //       setProfileImage(user.profileImage);
         //   }
 
-        //   await fetchAllTweets();
+        // await fetchAllTweets();
         setWeb3auth(web3auth);
+        await web3auth.initModal();
       } catch (error) {
         console.error(error);
       }
@@ -184,13 +194,45 @@ function App() {
     init();
   }, []);
 
+  useEffect(() => {
+    console.log(location?.state?.fromProfile);
+    if (location?.state?.fromProfile) {
+      if (web3auth) {
+        const getAndSetProvider = async () => {
+          const provider = await web3auth.connect();
+          setProvider(provider);
+        };
+        getAndSetProvider();
+      }
+      if (localStorage.getItem("user")) {
+        const { name, profileImage } = JSON.parse(
+          localStorage.getItem("user") || ""
+        );
+        setUserName(name);
+        setProfileImage(profileImage);
+      }
+      if (localStorage.getItem("account")) {
+        setAccount(localStorage.getItem("account") || "");
+      }
+      // fetchAllTweets();
+    }
+  }, [web3auth]);
+
+  // useEffect(() => {
+  //   if (provider) {
+  //     fetchAllTweets();
+  //   }
+  // }, [provider]);
+
   const logout = async () => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
       return;
     }
     await web3auth.logout();
+    location.state.fromProfile = null;
     setProvider(null);
+    localStorage.clear();
   };
 
   const login = async () => {
@@ -218,7 +260,13 @@ function App() {
     // const idToken = await web3auth.authenticateUser();
 
     if (web3authProvider) {
+      console.log(web3authProvider);
+      setProvider(web3authProvider);
+
+      // localStorage.clear();
       const user = await web3auth.getUserInfo();
+
+      localStorage.setItem("user", JSON.stringify(user));
       console.log(user);
 
       if (
@@ -239,13 +287,24 @@ function App() {
 
       const rpc = new RPC(web3authProvider);
       const accounts = await rpc.getAccounts();
+      localStorage.setItem("account", accounts);
+      setAccount(accounts);
+
       console.log(accounts, await rpc.getChainId());
+
+      // const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;
+      // const web3 = createAlchemyWeb3(alchemyKey, {
+      //   writeProvider: web3authProvider,
+      // });
 
       //Assuming user is already logged in.
       const getPrivateKey = async () => {
         const privateKey = await web3authProvider.request({
           method: "eth_private_key",
         });
+        console.log(privateKey);
+        localStorage.setItem("privateKey", privateKey as string);
+        // console.log(web3.eth.accounts.privateKeyToAccount(`${privateKey}`));
         // console.log(privateKey);
         //Do something with privateKey
       };
@@ -279,10 +338,13 @@ function App() {
 
     const rpc = new RPC(provider);
     try {
+      setLoadingText("Loading tweets...");
+      setLoading(true);
       let fetchedTweets = await rpc.getAllTweets();
+      setLoading(false);
       let tweets = [...fetchedTweets];
-      // console.log(tweets);
-      setTweets(tweets.reverse());
+      console.log(tweets);
+      setTweets([...tweets.reverse()]);
     } catch (error) {
       console.log("error in fetching tweets", error);
     }
@@ -295,11 +357,22 @@ function App() {
     }
 
     try {
+      setLoadingText("Processing Transaction. Please Wait...");
+      setLoading(true);
       const rpc = new RPC(provider);
       const res = await rpc.sendUpVoteTransaction(tweetIndex);
       console.log(res);
-
-      fetchAllTweets();
+      setLoading(false);
+      if (res === "success") {
+        toast.success("Upvote added successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        fetchAllTweets();
+      } else {
+        toast.error(res.replace("execution reverted: ", ""), {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     } catch (error) {
       console.log("failed to execute upvote transaction", error);
     }
@@ -315,6 +388,8 @@ function App() {
 
     try {
       const rpc = new RPC(provider);
+      setLoadingText("Processing Transaction. Please Wait...");
+      setLoading(true);
       console.log(provider);
       const res = await rpc.sendWriteTweetTransaction(
         newTweetName,
@@ -325,13 +400,24 @@ function App() {
       //   fetchAllTweets();
       // }, refreshTime);
 
-      fetchAllTweets();
-      // titleRef.current.value = "";
-      // descRef.current.value = "";
+      if (titleRef.current) {
+        titleRef.current.value = "";
+      }
 
-      toast.success("Tweet added successfully", {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      if (descRef.current) {
+        descRef.current.value = "";
+      }
+      setLoading(false);
+      if (res === "success") {
+        fetchAllTweets();
+        toast.success("Tweet added successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } else {
+        toast.error(res.replace("execution reverted: ", ""), {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     } catch (error) {
       toast.error("Something went wrong", {
         position: toast.POSITION.TOP_LEFT,
@@ -349,13 +435,24 @@ function App() {
 
     try {
       const rpc = new RPC(provider);
-
-      toast.success("Comment added successfully - refresh after 30 sec", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      console.log(comment, tweetIndex);
-      await rpc.sendAddCommentTransaction(tweetIndex, comment);
-      fetchAllTweets();
+      // console.log(comment, tweetIndex);
+      setLoadingText("Processing Transaction. Please Wait...");
+      setLoading(true);
+      const res = await rpc.sendAddCommentTransaction(tweetIndex, comment);
+      setLoading(false);
+      if (commentRef.current) {
+        commentRef.current.value = "";
+      }
+      if (res === "success") {
+        toast.success("Comment added successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        fetchAllTweets();
+      } else {
+        toast.error(res.replace("execution reverted: ", ""), {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     } catch (error) {
       toast.error("Something went wrong", {
         position: toast.POSITION.TOP_LEFT,
@@ -389,8 +486,8 @@ function App() {
             <Card.Title>What are you thinking? Tweet it out!</Card.Title>
             <Card.Text></Card.Text>
 
-            <Form.Control
-              as="input"
+            <input
+              // as="input"
               type="reset"
               // ref={titleRef}
               onChange={handleNewTweetNameChange}
@@ -398,9 +495,9 @@ function App() {
             />
             <br></br>
             <br></br>
-            <Form.Control
-              as="textarea"
-              type="reset"
+            <textarea
+              // as="textarea"
+              // type="reset"
               // ref={descRef}
               onChange={handleNewTweetDescriptionChange}
               placeholder="Description"
@@ -425,7 +522,7 @@ function App() {
                     <FaThumbsUp onClick={(event) => upVote(i)} /> {tweet.name}
                   </Card.Title>
                   <p>Total Upvotes: {tweet.upvotes}</p>
-                  <p>Tweeted by: {tweet.fromAddress}</p>
+                  <p>Tweeted by: {tweet.author}</p>
                   <Card.Text>{tweet.description}</Card.Text>
 
                   <div>
@@ -486,22 +583,86 @@ function App() {
   );
 
   return (
-    <div className="grid">
-      {provider ? (
-        <Twitter
-          logoutButton={logout}
-          handleNewTweetDescriptionChange={handleNewTweetDescriptionChange}
-          handleNewTweetNameChange={handleNewTweetNameChange}
-          addNewTweet={addNewTweet}
-          fetchAllTweets={fetchAllTweets}
-          tweets={tweets}
-          upVote={upVote}
-          handleCommentChange={handleCommentChange}
-          addComment={addComment}
-          refresh={refresh}
-          username={userName}
-          profileimage={profileImage}
-        />
+    <div className={enableInfo || loading ? "grid-no-scroll" : "grid"}>
+      {provider || location?.state?.fromProfile ? (
+        <>
+          <div className={loading ? "overlay" : "hidden"}>
+            <img
+              src="https://usagif.com/wp-content/uploads/loading-102.gif"
+              alt=""
+            />
+            <p>{loadingText}</p>
+          </div>
+          <div className={enableInfo ? "info-overlay" : "hidden"}>
+            <h1>Welcome to Tweetverse!!</h1>
+            <ul>
+              <li className="info-list">
+                <p>
+                  Tweetverse is a fully decentralized Twitter clone that allows
+                  Web2.0 authentication using your actual Twitter or Google
+                  Accounts. Each and every post on this app is a tradeable NFT
+                  of it's own.
+                </p>
+              </li>
+              <li className="info-list">
+                <p>
+                  You have been provided a particular Ethereum Public Address on
+                  sign in. Please visit the "Profile" Page to check it out
+                </p>
+              </li>
+              <li className="info-list">
+                <p>
+                  Please notw that the Ethereum Address keeps changing with the
+                  Login Method. So Try to stick to a single login method for
+                  maintaining a single account.
+                </p>
+              </li>
+              <li className="info-list">
+                <p>
+                  Head over to the profile page to "Fund" your account using the
+                  "Mumbai Matic Faucet". This step is essential for using the
+                  application
+                </p>
+              </li>
+              <li className="info-list">
+                <p>
+                  Users can also access their respective account "Private Key"
+                  if they wish to add it to their Web3 Wallets.
+                </p>
+              </li>
+            </ul>
+            <button
+              className="info-close"
+              onClick={() => {
+                setEnableInfo(false);
+              }}
+            >
+              Close
+            </button>
+          </div>
+          <Twitter
+            logoutButton={logout}
+            account={account}
+            handleNewTweetDescriptionChange={handleNewTweetDescriptionChange}
+            handleNewTweetNameChange={handleNewTweetNameChange}
+            addNewTweet={addNewTweet}
+            fetchAllTweets={fetchAllTweets}
+            tweets={tweets}
+            upVote={upVote}
+            handleCommentChange={handleCommentChange}
+            provider={provider}
+            addComment={addComment}
+            refresh={refresh}
+            username={userName}
+            profileimage={profileImage}
+            titleRef={titleRef}
+            descRef={descRef}
+            loading={loading}
+            setLoading={setLoading}
+            setEnableInfo={setEnableInfo}
+            commentRef={commentRef}
+          />
+        </>
       ) : (
         unloggedInView
       )}{" "}

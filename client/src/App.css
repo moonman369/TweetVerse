@@ -48,6 +48,15 @@ body {
   -webkit-tap-highlight-color: rgba(211, 211, 211, 0);
   overflow-x: hidden;
 }
+
+.no-scroll {
+  overflow: hidden;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
 hr {
   margin: 1rem 0;
   color: inherit;
@@ -153,6 +162,7 @@ p {
 .leftbar {
   min-width: 250px;
   max-width: 250px;
+  cursor: pointer;
 }
 .logo {
   float: left;
@@ -163,6 +173,7 @@ p {
 .logo a {
   float: left;
   width: 100%;
+  cursor: pointer;
 }
 .logo a img {
   float: left;
@@ -527,4 +538,199 @@ svg {
 .tweet-list.thread .tweet-content > span a {
   color: #b8b5b5;
   text-decoration: none;
+}
+
+.info-icon {
+  height: 28px;
+  width: 28px;
+}
+
+.grid {
+  display: block;
+}
+
+.grid-no-scroll {
+  display: block;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  /* backdrop-filter: blur(6px); */
+  background-color: #0e0e0e9c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-y: hidden;
+}
+
+.info-overlay {
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  height: 100%;
+  width: 100%;
+  z-index: 11;
+  backdrop-filter: blur(10px);
+  background-color: #0e0e0e9c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  overflow-y: hidden;
+}
+
+.info-overlay > h1 {
+  /* margin-right: 4rem;
+  margin-left: 4rem; */
+  margin-top: 3rem;
+}
+
+.info-close {
+  background: #cc6464;
+  color: #e6e7e9;
+  border: none;
+  font-size: large;
+  border-radius: 10px;
+  padding: 10px 15px 10px 15px;
+  cursor: pointer;
+}
+
+.info-list {
+  margin-right: 5rem;
+  margin-left: 5rem;
+}
+
+.overlay > img {
+  height: 80px;
+  width: 80px;
+}
+
+.hidden {
+  display: none;
+}
+
+/*=================================================PROFILE=================================================*/
+
+.profile-center {
+  border-left: 1px solid #3a3a3a;
+  border-right: 1px solid #3a3a3a;
+  float: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-main {
+  width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.profile > img {
+  /* float: left; */
+  margin-left: 2rem;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+
+.profile-name {
+  margin-left: 2rem;
+  margin-top: 90px;
+  /* display: flex; */
+}
+.profile-name > a {
+  color: #1d9bf0;
+}
+
+.profile {
+  float: left;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 34px;
+  padding: 0 50px;
+  padding-bottom: 0px;
+  border-bottom: 1px solid #3a3a3a;
+  padding-bottom: 40px;
+}
+
+.profile-info-container {
+  margin-top: 2rem;
+  margin-left: 1rem;
+  /* display: flex; */
+}
+
+.profile-info {
+  margin-top: 2rem;
+  float: left;
+  width: 350px;
+  height: 40px;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px 0 0 10px;
+  padding-top: 8px;
+  overflow: hidden;
+  /* padding-bottom: 20px; */
+  padding-left: 12px;
+  font-size: 16px;
+  margin-bottom: 9px;
+  background: #1f1f1f;
+  color: #bebebe;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-info-block {
+  display: flex;
+  margin-bottom: 3rem;
+  /* display: contents; */
+}
+
+.show-hide-btn {
+  margin-top: 2rem;
+  background: rgba(201, 201, 201, 0.404);
+  border: none;
+  border-radius: 0 10px 10px 0;
+  font-size: larger;
+  padding: 0;
+  width: 55px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.fund-a {
+  margin-left: 3rem;
+  margin-top: 2rem;
+}
+
+.fund-btn {
+  background: #1d9bf0;
+  color: #ece7e7;
+  border: none;
+  border-radius: 10px;
+  /* font-size: larger; */
+  padding-left: 12px;
+  padding-right: 12px;
+  /* width: 55px; */
+  height: 40px;
+  cursor: pointer;
+}
+
+.show-hide-btn.green {
+  color: #1df07c;
+}
+
+.profile-info-field {
+  margin-left: 3rem;
+  margin-top: 2.5rem;
+  margin-right: 3rem;
+  font-size: larger;
 }

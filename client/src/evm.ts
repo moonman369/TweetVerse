@@ -60,8 +60,9 @@ export default class EthereumRpc {
       //   .send({ from: accounts[0] });
 
       // return "success";
-    } catch (error) {
-      return error as string;
+    } catch (error: any) {
+      // console.log(error.reason);
+      return error.reason;
     }
   }
 
@@ -82,13 +83,13 @@ export default class EthereumRpc {
 
       const tx = await tweetVerse
         .connect(signer)
-        .addComment(tweetIndex, comment);
+        .postComment(tweetIndex, comment);
       const res = await tx.wait();
       console.log(res);
 
       return "success";
-    } catch (error) {
-      return error as string;
+    } catch (error: any) {
+      return error.reason;
     }
   }
 
@@ -109,14 +110,15 @@ export default class EthereumRpc {
 
       const tx = await tweetVerse
         .connect(signer)
-        .writeTweet(tweetName, tweetDescription);
+        .postTweet(tweetName, tweetDescription);
 
       const res = await tx.wait();
       console.log(res);
 
       return "success";
-    } catch (error) {
-      return error as string;
+    } catch (error: any) {
+      // console.log(error.message);
+      return error.reason;
     }
   }
 
@@ -135,7 +137,23 @@ export default class EthereumRpc {
         contractAddress
       );
 
-      return await helloWorldContract.methods.getAllTweets().call();
+      const tweets = await helloWorldContract.methods.getAllTweets().call();
+      var formattedTweets = [];
+      for (let tweet of tweets) {
+        const fetchedComments = await helloWorldContract.methods
+          .getCommenstByTweetId(tweet?.id)
+          .call();
+        formattedTweets.push({ ...tweet, comments: fetchedComments });
+      }
+      // tweets.map(async (tweet: any) => {
+      //   const fetchedComments = await helloWorldContract.methods
+      //     .getCommenstByTweetId(tweet?.id)
+      //     .call();
+      //   return { ...tweet, comments: fetchedComments };
+      // });
+      return formattedTweets;
+
+      // return await helloWorldContract.methods.getAllTweets().call();
     } catch (error) {
       return [];
     }

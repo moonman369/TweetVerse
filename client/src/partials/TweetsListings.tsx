@@ -14,8 +14,11 @@ function TweetListings(props: any) {
                 <img src="images/user.png" alt=""></img>
                 <div className="tweet-content">
                   <h5>
-                    <a href="#!" title="">
-                      {tweet.fromAddress.replace(/(.{9})..+/, "$1...")}{" "}
+                    <a
+                      href={`https://mumbai.polygonscan.com/address/${tweet.author}`}
+                      target="_blank"
+                    >
+                      {tweet.author.replace(/(.{9})..+/, "$1...")}{" "}
                       <strong>@{tweet.name}</strong>
                     </a>
                   </h5>
@@ -37,7 +40,7 @@ function TweetListings(props: any) {
 
                       {tweet.comments.length}
                     </button>
-                    <a href="#!" title="">
+                    <a>
                       <svg
                         viewBox="0 0 24 24"
                         aria-hidden="true"

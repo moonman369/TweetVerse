@@ -4,12 +4,14 @@ function AddTweet(props: any) {
       <div className="add-tweet">
         <img src={props.profileimage} alt=""></img>
         <div className="tweet-form">
-          <form action="">
+          <form ref={props.formRef} action="">
             <input
+              ref={props.titleRef}
               onChange={props.handleNewTweetNameChange}
               placeholder="Add your tweet name"
             />
             <textarea
+              ref={props.descRef}
               name=""
               id=""
               rows={3}

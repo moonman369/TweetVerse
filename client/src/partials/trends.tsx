@@ -10,17 +10,29 @@ function Trends() {
           <strong>#Web3Auth</strong>
           <span>125k tweets</span>
         </a>
-        <a href="http://goerlifaucet.com/" title="" target="_blank">
-          <strong>#GoerliFaucet</strong>
+        <a href="https://mumbaifaucet.com/" title="" target="_blank">
+          <strong>#MumbaiFaucet</strong>
           <span>98k tweets</span>
         </a>
-        <a href="http://twitter.com/hashtag/EthereumMerge" title="" target="_blank">
+        <a
+          href="http://twitter.com/hashtag/EthereumMerge"
+          title=""
+          target="_blank"
+        >
           <strong>#EthereumMerge</strong>
           <span>53k tweets</span>
         </a>
         <a href="https://metaschool.so/" title="" target="_blank">
           <strong>#Metaschool</strong>
           <span>42k tweets</span>
+        </a>
+        <a
+          href="https://devfoliomoonman369.netlify.app/"
+          title=""
+          target="_blank"
+        >
+          <strong>#AboutDev</strong>
+          <span>39k tweets</span>
         </a>
       </div>
     </>

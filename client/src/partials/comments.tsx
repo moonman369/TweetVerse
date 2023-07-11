@@ -6,14 +6,18 @@ function Comments(props: any) {
       <div className="add-tweet reply-tweet">
         <span>
           Reply to{" "}
-          <a href="#!" title="">
+          <a
+            href={`https://mumbai.polygonscan.com/address/${props.tweet.author}`}
+            target="_blank"
+          >
             {" "}
-            @{props.tweet.fromAddress.replace(/(.{9})..+/, "$1...")}
+            @{props.tweet.author.replace(/(.{9})..+/, "$1...")}
           </a>
         </span>
         <div className="tweet-form">
           <form action="">
             <textarea
+              ref={props.commentRef}
               name=""
               id=""
               rows={2}
@@ -38,18 +42,24 @@ function Comments(props: any) {
           <img src="images/user.png" alt=""></img>
           <div className="tweet-content">
             <h5>
-              <a href="#!" title="">
-                @{props.tweet.fromAddress.replace(/(.{9})..+/, "$1...")}
+              <a
+                href={`https://mumbai.polygonscan.com/address/${comment.author}`}
+                target="_blank"
+              >
+                @{comment.author.replace(/(.{9})..+/, "$1...")}
               </a>
             </h5>
             <span>
               Replying to{" "}
-              <a href="#!" title="">
+              <a
+                href={`https://mumbai.polygonscan.com/address/${props.tweet.author}`}
+                target="_blank"
+              >
                 {" "}
-                @{props.tweet.fromAddress.replace(/(.{9})..+/, "$1...")}
+                @{props.tweet.author.replace(/(.{9})..+/, "$1...")}
               </a>
             </span>
-            <p>{comment}</p>
+            <p>{comment.content}</p>
           </div>
         </div>
       ))}
