@@ -41,7 +41,7 @@ export default class EthereumRpc {
     try {
       const provider = new ethers.providers.Web3Provider(this.provider);
       const signer = provider.getSigner();
-      console.log(signer);
+      // console.log(signer);
 
       const tweetVerse = new ethers.Contract(
         contractAddress,
@@ -51,7 +51,7 @@ export default class EthereumRpc {
 
       const tx = await tweetVerse.connect(signer).upvote(tweetIndex);
       const res = await tx.wait();
-      console.log(res);
+      // console.log(res);
 
       return "success";
 
@@ -73,7 +73,7 @@ export default class EthereumRpc {
     try {
       const provider = new ethers.providers.Web3Provider(this.provider);
       const signer = provider.getSigner();
-      console.log(signer);
+      // console.log(signer);
 
       const tweetVerse = new ethers.Contract(
         contractAddress,
@@ -85,7 +85,7 @@ export default class EthereumRpc {
         .connect(signer)
         .postComment(tweetIndex, comment);
       const res = await tx.wait();
-      console.log(res);
+      // console.log(res);
 
       return "success";
     } catch (error: any) {
@@ -100,7 +100,7 @@ export default class EthereumRpc {
     try {
       const provider = new ethers.providers.Web3Provider(this.provider);
       const signer = provider.getSigner();
-      console.log(signer);
+      // console.log(signer);
 
       const tweetVerse = new ethers.Contract(
         contractAddress,
@@ -113,7 +113,7 @@ export default class EthereumRpc {
         .postTweet(tweetName, tweetDescription);
 
       const res = await tx.wait();
-      console.log(res);
+      // console.log(res);
 
       return "success";
     } catch (error: any) {

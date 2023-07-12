@@ -195,7 +195,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(location?.state?.fromProfile);
+    // console.log(location?.state?.fromProfile);
     if (location?.state?.fromProfile) {
       if (web3auth) {
         const getAndSetProvider = async () => {
@@ -260,7 +260,7 @@ function App() {
     // const idToken = await web3auth.authenticateUser();
 
     if (web3authProvider) {
-      console.log(web3authProvider);
+      // console.log(web3authProvider);
       setProvider(web3authProvider);
 
       // localStorage.clear();
@@ -302,7 +302,7 @@ function App() {
         const privateKey = await web3authProvider.request({
           method: "eth_private_key",
         });
-        console.log(privateKey);
+        // console.log(privateKey);
         localStorage.setItem("privateKey", privateKey as string);
         // console.log(web3.eth.accounts.privateKeyToAccount(`${privateKey}`));
         // console.log(privateKey);
@@ -343,7 +343,7 @@ function App() {
       let fetchedTweets = await rpc.getAllTweets();
       setLoading(false);
       let tweets = [...fetchedTweets];
-      console.log(tweets);
+      // console.log(tweets);
       setTweets([...tweets.reverse()]);
     } catch (error) {
       console.log("error in fetching tweets", error);
@@ -390,7 +390,7 @@ function App() {
       const rpc = new RPC(provider);
       setLoadingText("Processing Transaction. Please Wait...");
       setLoading(true);
-      console.log(provider);
+      // console.log(provider);
       const res = await rpc.sendWriteTweetTransaction(
         newTweetName,
         newTweetDescription
