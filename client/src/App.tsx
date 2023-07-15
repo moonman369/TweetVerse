@@ -27,6 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 import { useLocation } from "react-router-dom";
 import { profile } from "console";
+import GetStarted from "./partials/getstarted";
 
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
 
@@ -593,7 +594,8 @@ function App() {
             />
             <p>{loadingText}</p>
           </div>
-          <div className={enableInfo ? "info-overlay" : "hidden"}>
+          <GetStarted enableInfo={enableInfo} setEnableInfo={setEnableInfo} />
+          {/* <div className={enableInfo ? "info-overlay" : "hidden"}>
             <h1>Welcome to Tweetverse!!</h1>
             <ul>
               <li className="info-list">
@@ -639,7 +641,7 @@ function App() {
             >
               Close
             </button>
-          </div>
+          </div> */}
           <Twitter
             logoutButton={logout}
             account={account}

@@ -5,6 +5,7 @@ import Leftbar from "./partials/leftbar";
 import { RxExternalLink, RxCopy } from "react-icons/rx";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { MdDoneAll } from "react-icons/md";
+import GetStarted from "./partials/getstarted";
 // import { LuCopy, LuCopyCheck } from "react-icons/lu";
 
 const MyProfile = () => {
@@ -19,6 +20,7 @@ const MyProfile = () => {
   const [privateKey, setPrivateKey] = useState<string | "">("");
   const [showKey, setShowKey] = useState<boolean | null>(false);
   const [copied, setCopied] = useState<boolean | null>(false);
+  const [enableInfo, setEnableInfo] = useState<boolean | null>(false);
 
   useEffect(() => {
     const { profileImage, name, email } = JSON.parse(
@@ -42,7 +44,8 @@ const MyProfile = () => {
 
   return (
     <div className="profile-main">
-      <Leftbar account={account}></Leftbar>
+      <GetStarted enableInfo={enableInfo} setEnableInfo={setEnableInfo} />
+      <Leftbar account={account} setEnableInfo={setEnableInfo}></Leftbar>
       <div className="profile-center">
         <p
           onClick={() => {
