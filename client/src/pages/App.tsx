@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, MutableRefObject } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { Card, Form } from "react-bootstrap";
 import { FaComment, FaRecycle, FaRetweet, FaThumbsUp } from "react-icons/fa";
@@ -24,9 +24,9 @@ import { APP_CONSTANTS } from "../context/constants";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createAlchemyWeb3 } from "@alch/alchemy-web3";
+// import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 import { useLocation } from "react-router-dom";
-import { profile } from "console";
+// import { profile } from "console";
 import GetStarted from "../components/partials/getstarted";
 
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
