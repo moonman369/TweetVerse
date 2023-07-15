@@ -706,6 +706,19 @@ svg {
   cursor: pointer;
 }
 
+.copy-btn {
+  margin-top: 2rem;
+  margin-left: 2rem;
+  background: rgba(201, 201, 201, 0.404);
+  border: none;
+  border-radius: 10px 10px 10px 10px;
+  font-size: larger;
+  padding: 0;
+  width: 55px;
+  height: 40px;
+  cursor: pointer;
+}
+
 .fund-a {
   margin-left: 3rem;
   margin-top: 2rem;

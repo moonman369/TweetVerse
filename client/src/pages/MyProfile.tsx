@@ -11,7 +11,6 @@ import GetStarted from "../components/partials/getstarted";
 const MyProfile = () => {
   const navigate = useNavigate();
   const { account } = useParams();
-  const location = useLocation();
 
   const [image, setImage] = useState<string | "">("");
   const [name, setName] = useState<string | "">("");
@@ -20,6 +19,7 @@ const MyProfile = () => {
   const [privateKey, setPrivateKey] = useState<string | "">("");
   const [showKey, setShowKey] = useState<boolean | null>(false);
   const [copied, setCopied] = useState<boolean | null>(false);
+  const [copiedPvt, setCopiedPvt] = useState<boolean | null>(false);
   const [enableInfo, setEnableInfo] = useState<boolean | null>(false);
 
   useEffect(() => {
@@ -42,18 +42,28 @@ const MyProfile = () => {
     }
   };
 
+  const copyPvt = () => {
+    if (!copiedPvt) {
+      setCopiedPvt(true);
+      navigator.clipboard.writeText(privateKey || "");
+      setTimeout(() => {
+        setCopiedPvt(false);
+      }, 3000);
+    }
+  };
+
   return (
     <div className="profile-main">
       <GetStarted enableInfo={enableInfo} setEnableInfo={setEnableInfo} />
       <Leftbar account={account} setEnableInfo={setEnableInfo}></Leftbar>
       <div className="profile-center">
-        <p
+        {/* <p
           onClick={() => {
             navigate("/", { state: { fromProfile: 1 } });
           }}
         >
           MyProfile
-        </p>
+        </p> */}
         <div className="profile">
           <img src={image} alt="" />
           <span className="profile-name">
@@ -110,6 +120,13 @@ const MyProfile = () => {
             >
               {showKey ? <FiEyeOff /> : <FiEye />}
             </button>
+            {showKey ? (
+              <button className="copy-btn" onClick={copyPvt}>
+                {copiedPvt ? <MdDoneAll className="green" /> : <RxCopy />}
+              </button>
+            ) : (
+              <div></div>
+            )}
           </span>
         </div>
       </div>
