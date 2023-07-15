@@ -112,7 +112,16 @@ function Leftbar(props: any) {
             </li>
 
             <li>
-              <button onClick={props.signout} style={{ cursor: "pointer" }}>
+              <button
+                onClick={() => {
+                  if (props.signout) {
+                    props.signout();
+                  } else {
+                    navigate("/");
+                  }
+                }}
+                style={{ cursor: "pointer" }}
+              >
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
