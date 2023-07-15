@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Comments from "./comments";
-import { APP_CONSTANTS } from "../constants";
+import { APP_CONSTANTS } from "../../context/constants";
 
 function TweetListings(props: any) {
   const [show, setShow] = useState(false);

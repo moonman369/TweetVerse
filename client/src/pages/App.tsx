@@ -9,17 +9,17 @@ import {
   CHAIN_NAMESPACES,
   SafeEventEmitterProvider,
 } from "@web3auth/base";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { MetamaskAdapter } from "@web3auth/metamask-adapter";
+// import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+// import { MetamaskAdapter } from "@web3auth/metamask-adapter";
 import { TorusWalletConnectorPlugin } from "@web3auth/torus-wallet-connector-plugin";
-import {
-  WalletConnectV2Adapter,
-  getWalletConnectV2Settings,
-} from "@web3auth/wallet-connect-v2-adapter";
-import Twitter from "./twitter";
+// import {
+//   WalletConnectV2Adapter,
+//   getWalletConnectV2Settings,
+// } from "@web3auth/wallet-connect-v2-adapter";
+import Twitter from "../components/twitter";
 
-import RPC from "./evm";
-import { APP_CONSTANTS } from "./constants";
+import RPC from "../context/evm";
+import { APP_CONSTANTS } from "../context/constants";
 
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,7 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 import { useLocation } from "react-router-dom";
 import { profile } from "console";
-import GetStarted from "./partials/getstarted";
+import GetStarted from "../components/partials/getstarted";
 
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
 

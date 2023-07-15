@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./App.css";
-import Leftbar from "./partials/leftbar";
+import Leftbar from "../components/partials/leftbar";
 import { RxExternalLink, RxCopy } from "react-icons/rx";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { MdDoneAll } from "react-icons/md";
-import GetStarted from "./partials/getstarted";
+import GetStarted from "../components/partials/getstarted";
 // import { LuCopy, LuCopyCheck } from "react-icons/lu";
 
 const MyProfile = () => {
