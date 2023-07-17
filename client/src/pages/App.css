@@ -688,6 +688,12 @@ svg {
   justify-content: space-between;
 }
 
+.bal {
+  width: 275px;
+
+  border-radius: 10px 10px 10px 10px;
+}
+
 .profile-info-block {
   display: flex;
   margin-bottom: 3rem;

@@ -1,6 +1,6 @@
 import type { SafeEventEmitterProvider } from "@web3auth/base";
 // import Web3 from "web3";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import { APP_CONSTANTS } from "./constants";
 
@@ -21,6 +21,16 @@ export default class EthereumRpc {
       const provider = new ethers.providers.Web3Provider(this.provider);
       const signer = provider.getSigner();
       return await signer.getAddress();
+    } catch (error: unknown) {
+      return error as string;
+    }
+  }
+
+  async getBalance(): Promise<string> {
+    try {
+      const provider = new ethers.providers.Web3Provider(this.provider);
+      const signer = provider.getSigner();
+      return ethers.utils.formatEther(await signer.getBalance());
     } catch (error: unknown) {
       return error as string;
     }

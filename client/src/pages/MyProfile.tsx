@@ -17,6 +17,7 @@ const MyProfile = () => {
   const [email, setEmail] = useState<string | "">("");
   const [showEmail, setShowEmail] = useState<boolean | null>(false);
   const [privateKey, setPrivateKey] = useState<string | "">("");
+  const [balance, setBalance] = useState<string | "">("");
   const [showKey, setShowKey] = useState<boolean | null>(false);
   const [copied, setCopied] = useState<boolean | null>(false);
   const [copiedPvt, setCopiedPvt] = useState<boolean | null>(false);
@@ -30,6 +31,7 @@ const MyProfile = () => {
     setName(name);
     setEmail(email);
     setPrivateKey(localStorage.getItem("privateKey") as string);
+    setBalance(localStorage.getItem("balance") as string);
   }, []);
 
   const copy = () => {
@@ -91,6 +93,10 @@ const MyProfile = () => {
             >
               {showEmail ? <FiEyeOff /> : <FiEye />}
             </button>
+          </span>
+          <span className="profile-info-block">
+            <p className="profile-info-field">User Balance</p>
+            <div className="profile-info bal">{balance} MATIC</div>
           </span>
           <span className="profile-info-block">
             <p className="profile-info-field">Public Address</p>

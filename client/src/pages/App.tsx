@@ -28,6 +28,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
 // import { profile } from "console";
 import GetStarted from "../components/partials/getstarted";
+import { BigNumber, ethers } from "ethers";
 
 const clientId = APP_CONSTANTS.CLIENT_ID; // get from https://dashboard.web3auth.io
 
@@ -39,6 +40,7 @@ function App() {
     null
   );
   const [account, setAccount] = useState<string | "">("");
+  const [balance, setBalance] = useState<string | "">("");
   const [tweets, setTweets] = useState<Array<any> | null>(null);
   const [comment, setComment] = useState<string | "">("");
   const [userName, setUserName] = useState<string | "">("");
@@ -51,8 +53,8 @@ function App() {
     ""
   );
   const refreshTime = APP_CONSTANTS.REACT_APP_REFRESH_TIMER * 1000;
-  const [torusPlugin, setTorusPlugin] =
-    useState<TorusWalletConnectorPlugin | null>(null);
+  // const [torusPlugin, setTorusPlugin] =
+  //   useState<TorusWalletConnectorPlugin | null>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLInputElement>(null);
   const commentRef = useRef<HTMLInputElement>(null);
@@ -196,6 +198,12 @@ function App() {
   }, []);
 
   useEffect(() => {
+    setTimeout(() => {
+      fetchAllTweets();
+    }, refreshTime * 1000);
+  }, []);
+
+  useEffect(() => {
     // console.log(location?.state?.fromProfile);
     if (location?.state?.fromProfile) {
       if (web3auth) {
@@ -214,6 +222,9 @@ function App() {
       }
       if (localStorage.getItem("account")) {
         setAccount(localStorage.getItem("account") || "");
+      }
+      if (localStorage.getItem("balance")) {
+        setAccount(localStorage.getItem("balance") || "");
       }
       // fetchAllTweets();
     }
@@ -291,6 +302,11 @@ function App() {
       localStorage.setItem("account", accounts);
       setAccount(accounts);
 
+      const balance = await rpc.getBalance();
+      localStorage.setItem("balance", balance);
+      setBalance(balance);
+      console.log(balance);
+
       console.log(accounts, await rpc.getChainId());
 
       // const alchemyKey = APP_CONSTANTS.ALCHEMY_KEY;
@@ -356,6 +372,16 @@ function App() {
       console.log("provider not initialized yet");
       return;
     }
+    if (
+      ethers.utils
+        .parseUnits(balance)
+        .lte(ethers.utils.parseUnits("30", "gwei"))
+    ) {
+      toast.error("Insufficient MATIC Balance", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return;
+    }
 
     try {
       setLoadingText("Processing Transaction. Please Wait...");
@@ -384,6 +410,16 @@ function App() {
     // e;
     if (!provider) {
       console.log("provider not initialized yet");
+      return;
+    }
+    if (
+      ethers.utils
+        .parseUnits(balance)
+        .lte(ethers.utils.parseUnits("30", "gwei"))
+    ) {
+      toast.error("Insufficient MATIC Balance", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       return;
     }
 
@@ -431,6 +467,16 @@ function App() {
     event.preventDefault();
     if (!provider) {
       console.log("provider not initialized yet");
+      return;
+    }
+    if (
+      ethers.utils
+        .parseUnits(balance)
+        .lte(ethers.utils.parseUnits("30", "gwei"))
+    ) {
+      toast.error("Insufficient MATIC Balance", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       return;
     }
 
